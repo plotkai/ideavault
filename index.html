@@ -3,8 +3,223 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IdeaVault</title>
+    <title>Idea Graveyard & Evaluator</title>
+    <link rel="manifest" href="data:application/manifest+json;charset=utf-8,%7B%22name%22%3A%22Idea%20Evaluator%22%2C%22short_name%22%3A%22Ideas%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%230f172a%22%2C%22theme_color%22%3A%22%233b82f6%22%7D">
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
+<body class="bg-slate-950 text-slate-100 min-h-screen font-sans selection:bg-blue-500 selection:text-white">
+    <div class="max-w-4xl mx-auto px-4 py-8">
+        <header class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 pb-6 border-b border-slate-800 gap-4">
+            <div>
+                <h1 class="text-2xl font-bold tracking-tight text-white flex items-center gap-2">
+                    <svg class="w-7 h-7 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
+                    Idea Graveyard & Vault
+                </h1>
+                <p class="text-sm text-slate-400 mt-1">Dump ideas fast, score them objectively, and kill what doesn't work.</p>
+            </div>
+            <button onclick="openModal()" class="bg-blue-600 hover:bg-blue-500 text-white px-4 py-2.5 rounded-xl font-medium text-sm transition shadow-lg shadow-blue-600/20 flex items-center gap-2">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                New Idea
+            </button>
+        </header>
+
+        <!-- Main Content Area -->
+        <main>
+            <div id="emptyState" class="hidden text-center py-20 bg-slate-900/40 rounded-2xl border border-slate-800/80">
+                <p class="text-slate-400 mb-2">No ideas logged yet.</p>
+                <p class="text-xs text-slate-500">Click "New Idea" to run your first market evaluation.</p>
+            </div>
+            <div id="ideasGrid" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+        </main>
+    </div>
+
+    <!-- Modal Form -->
+    <div id="ideaModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm hidden z-50 overflow-y-auto px-4 py-6">
+        <div class="max-w-2xl mx-auto bg-slate-900 border border-slate-800 rounded-2xl shadow-2xl overflow-hidden my-auto">
+            <div class="flex justify-between items-center px-6 py-4 border-b border-slate-800">
+                <h2 id="modalTitle" class="text-lg font-semibold text-white">Evaluate New Idea</h2>
+                <button onclick="closeModal()" class="text-slate-400 hover:text-white text-xl">&times;</button>
+            </div>
+            <form id="ideaForm" onsubmit="saveIdea(event)" class="p-6 space-y-6 max-h-[80vh] overflow-y-auto">
+                <input type="hidden" id="ideaId">
+                <div>
+                    <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">Idea Title</label>
+                    <input type="text" id="title" required class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-blue-500" placeholder="e.g., Airbnb for local events">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">Quick Brain Dump / Notes</label>
+                    <textarea id="description" rows="3" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-blue-500" placeholder="Why will this work? Who is it for?"></textarea>
+                </div>
+
+                <div class="border-t border-slate-800 pt-4">
+                    <h3 class="text-sm font-medium text-slate-300 mb-3">The 10-Factor Evaluation (0 to 10 scale)</h3>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <div class="flex justify-between text-xs text-slate-400 mb-1"><label>1. Urgency</label><span id="val_urgency">5</span></div>
+                            <input type="range" id="urgency" min="0" max="10" value="5" oninput="updateScoreVal('urgency')" class="w-full accent-blue-500">
+                        </div>
+                        <div>
+                            <div class="flex justify-between text-xs text-slate-400 mb-1"><label>2. Market Size</label><span id="val_marketSize">5</span></div>
+                            <input type="range" id="marketSize" min="0" max="10" value="5" oninput="updateScoreVal('marketSize')" class="w-full accent-blue-500">
+                        </div>
+                        <div>
+                            <div class="flex justify-between text-xs text-slate-400 mb-1"><label>3. Pricing Potential</label><span id="val_pricingPotential">5</span></div>
+                            <input type="range" id="pricingPotential" min="0" max="10" value="5" oninput="updateScoreVal('pricingPotential')" class="w-full accent-blue-500">
+                        </div>
+                        <div>
+                            <div class="flex justify-between text-xs text-slate-400 mb-1"><label>4. Customer Acquisition Cost</label><span id="val_cac">5</span></div>
+                            <input type="range" id="cac" min="0" max="10" value="5" oninput="updateScoreVal('cac')" class="w-full accent-blue-500">
+                        </div>
+                        <div>
+                            <div class="flex justify-between text-xs text-slate-400 mb-1"><label>5. Value Delivery Cost</label><span id="val_vdc">5</span></div>
+                            <input type="range" id="vdc" min="0" max="10" value="5" oninput="updateScoreVal('vdc')" class="w-full accent-blue-500">
+                        </div>
+                        <div>
+                            <div class="flex justify-between text-xs text-slate-400 mb-1"><label>6. Uniqueness</label><span id="val_uniqueness">5</span></div>
+                            <input type="range" id="uniqueness" min="0" max="10" value="5" oninput="updateScoreVal('uniqueness')" class="w-full accent-blue-500">
+                        </div>
+                        <div>
+                            <div class="flex justify-between text-xs text-slate-400 mb-1"><label>7. Speed to Market</label><span id="val_speedToMarket">5</span></div>
+                            <input type="range" id="speedToMarket" min="0" max="10" value="5" oninput="updateScoreVal('speedToMarket')" class="w-full accent-blue-500">
+                        </div>
+                        <div>
+                            <div class="flex justify-between text-xs text-slate-400 mb-1"><label>8. Up-front Investment</label><span id="val_upfrontInvestment">5</span></div>
+                            <input type="range" id="upfrontInvestment" min="0" max="10" value="5" oninput="updateScoreVal('upfrontInvestment')" class="w-full accent-blue-500">
+                        </div>
+                        <div>
+                            <div class="flex justify-between text-xs text-slate-400 mb-1"><label>9. Upsell Potential</label><span id="val_upsellPotential">5</span></div>
+                            <input type="range" id="upsellPotential" min="0" max="10" value="5" oninput="updateScoreVal('upsellPotential')" class="w-full accent-blue-500">
+                        </div>
+                        <div>
+                            <div class="flex justify-between text-xs text-slate-400 mb-1"><label>10. Evergreen Potential</label><span id="val_evergreenPotential">5</span></div>
+                            <input type="range" id="evergreenPotential" min="0" max="10" value="5" oninput="updateScoreVal('evergreenPotential')" class="w-full accent-blue-500">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex justify-end gap-3 pt-4 border-t border-slate-800">
+                    <button type="button" onclick="closeModal()" class="px-4 py-2 rounded-xl text-sm text-slate-400 hover:text-white transition">Cancel</button>
+                    <button type="submit" class="bg-blue-600 hover:bg-blue-500 text-white px-5 py-2 rounded-xl text-sm font-medium transition shadow-lg shadow-blue-600/20">Save Idea</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        const factors = ['urgency', 'marketSize', 'pricingPotential', 'cac', 'vdc', 'uniqueness', 'speedToMarket', 'upfrontInvestment', 'upsellPotential', 'evergreenPotential'];
+        let ideas = JSON.parse(localStorage.getItem('pwa_ideas') || '[]');
+
+        function updateScoreVal(factor) {
+            document.getElementById(`val_${factor}`).innerText = document.getElementById(factor).value;
+        }
+
+        function openModal(id = null) {
+            document.getElementById('ideaModal').classList.remove('hidden');
+            if (id) {
+                const idea = ideas.find(i => i.id === id);
+                document.getElementById('modalTitle').innerText = 'Edit Idea';
+                document.getElementById('ideaId').value = idea.id;
+                document.getElementById('title').value = idea.title;
+                document.getElementById('description').value = idea.description;
+                factors.forEach(f => {
+                    document.getElementById(f).value = idea.scores[f];
+                    updateScoreVal(f);
+                });
+            } else {
+                document.getElementById('modalTitle').innerText = 'Evaluate New Idea';
+                document.getElementById('ideaForm').reset();
+                factors.forEach(f => updateScoreVal(f));
+                document.getElementById('ideaId').value = '';
+            }
+        }
+
+        function closeModal() {
+            document.getElementById('ideaModal').classList.add('hidden');
+        }
+
+        function saveIdea(e) {
+            e.preventDefault();
+            const id = document.getElementById('ideaId').value || Date.now().toString();
+            const title = document.getElementById('title').value;
+            const description = document.getElementById('description').value;
+            
+            let scores = {};
+            let totalScore = 0;
+            factors.forEach(f => {
+                const val = parseInt(document.getElementById(f).value);
+                scores[f] = val;
+                totalScore += val;
+            });
+
+            const ideaData = { id, title, description, scores, totalScore, date: new Date().toLocaleDateString() };
+            
+            const index = ideas.findIndex(i => i.id === id);
+            if (index > -1) ideas[index] = ideaData;
+            else ideas.unshift(ideaData);
+
+            localStorage.setItem('pwa_ideas', JSON.stringify(ideas));
+            closeModal();
+            renderIdeas();
+        }
+
+        function deleteIdea(id) {
+            if (confirm('Trash this idea permanently?')) {
+                ideas = ideas.filter(i => i.id !== id);
+                localStorage.setItem('pwa_ideas', JSON.stringify(ideas));
+                renderIdeas();
+            }
+        }
+
+        function renderIdeas() {
+            const grid = document.getElementById('ideasGrid');
+            const emptyState = document.getElementById('emptyState');
+            grid.innerHTML = '';
+
+            if (ideas.length === 0) {
+                emptyState.classList.remove('hidden');
+                return;
+            }
+            emptyState.classList.add('hidden');
+
+            ideas.forEach(idea => {
+                let badgeColor = 'bg-rose-500/10 text-rose-400 border-rose-500/20';
+                let verdict = 'Kill Idea (≤50)';
+                if (idea.totalScore > 75) {
+                    badgeColor = 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20';
+                    verdict = 'Full Speed Ahead (>75)';
+                } else if (idea.totalScore > 50) {
+                    badgeColor = 'bg-amber-500/10 text-amber-400 border-amber-500/20';
+                    verdict = 'Marginal / Pay Bills (51-75)';
+                }
+
+                const card = document.createElement('div');
+                card.className = 'bg-slate-900/60 border border-slate-800/80 rounded-2xl p-5 flex flex-col justify-between hover:border-slate-700 transition';
+                card.innerHTML = `
+                    <div>
+                        <div class="flex justify-between items-start gap-3 mb-2">
+                            <h3 class="font-semibold text-white text-base">${escapeHtml(idea.title)}</h3>
+                            <span class="px-2.5 py-1 rounded-full text-xs font-medium border ${badgeColor}">Score: ${idea.totalScore}/100</span>
+                        </div>
+                        <p class="text-xs text-slate-400 mb-4 line-clamp-2">${escapeHtml(idea.description || 'No additional notes provided.')}</p>
+                        <div class="text-[11px] font-medium text-slate-400 mb-4 uppercase tracking-wider">${verdict}</div>
+                    </div>
+                    <div class="flex justify-between items-center pt-3 border-t border-slate-800/60 text-xs text-slate-500">
+                        <span>Added: ${idea.date}</span>
+                        <div class="flex gap-2">
+                            <button onclick="openModal('${idea.id}')" class="hover:text-blue-400 transition">Edit</button>
+                            <button onclick="deleteIdea('${idea.id}')" class="hover:text-rose-400 transition">Trash</button>
+                        </div>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function escapeHtml(str) {
+            return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+        }
+
+        renderIdeas();
+    </script>
 </body>
 </html>
