@@ -1,136 +1,513 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Idea Graveyard & Evaluator</title>
-    <link rel="manifest" href="data:application/manifest+json;charset=utf-8,%7B%22name%22%3A%22Idea%20Evaluator%22%2C%22short_name%22%3A%22Ideas%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%230f172a%22%2C%22theme_color%22%3A%22%233b82f6%22%7D">
+    <link rel="manifest"
+        href="data:application/manifest+json;charset=utf-8,%7B%22name%22%3A%22Idea%20Evaluator%22%2C%22short_name%22%3A%22Ideas%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%230f172a%22%2C%22theme_color%22%3A%22%233b82f6%22%7D">
     <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom range slider styling */
+        input[type=range] {
+            -webkit-appearance: none;
+            appearance: none;
+            height: 6px;
+            background: #1e293b;
+            border-radius: 9999px;
+            outline: none;
+        }
+
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: #3b82f6;
+            cursor: pointer;
+            box-shadow: 0 0 10px rgba(59, 130, 246, 0.5);
+            transition: transform 0.1s ease, background-color 0.2s ease;
+        }
+
+        input[type=range]::-webkit-slider-thumb:hover {
+            transform: scale(1.15);
+            background: #60a5fa;
+        }
+
+        input[type=range]::-moz-range-thumb {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: #3b82f6;
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 0 10px rgba(59, 130, 246, 0.5);
+        }
+
+        /* Hide scrollbars for clean horizontal tab scrolling if ever needed */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
 </head>
+
 <body class="bg-slate-950 text-slate-100 min-h-screen font-sans selection:bg-blue-500 selection:text-white">
-    <div class="max-w-4xl mx-auto px-4 py-8">
-        <header class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 pb-6 border-b border-slate-800 gap-4">
-            <div>
+    <div class="max-w-5xl mx-auto px-4 py-8">
+        <!-- Header -->
+        <header
+            class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 pb-6 border-b border-slate-800 gap-4">
+            <div class="space-y-0.5">
                 <h1 class="text-2xl font-bold tracking-tight text-white flex items-center gap-2">
-                    <svg class="w-7 h-7 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
+                    <svg class="w-7 h-7 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10">
+                        </path>
+                    </svg>
                     Idea Graveyard & Vault
                 </h1>
-                <p class="text-sm text-slate-400 mt-1">Dump ideas fast, score them objectively, and kill what doesn't work.</p>
+                <p class="text-xs sm:text-sm text-slate-400">10-Factor Market Evaluation Framework</p>
             </div>
-            <button onclick="openModal()" class="bg-blue-600 hover:bg-blue-500 text-white px-4 py-2.5 rounded-xl font-medium text-sm transition shadow-lg shadow-blue-600/20 flex items-center gap-2">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
-                New Idea
-            </button>
+            <!-- Action buttons: Export & Import on the left, New Idea on the right in mobile view -->
+            <div class="flex items-center justify-between sm:justify-end gap-2 w-full sm:w-auto sm:ml-auto">
+                <div class="flex items-center gap-2">
+                    <button onclick="exportJSON()" id="exportBtn" title="Export ideas as JSON file"
+                        class="bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-800 hover:border-slate-700 px-3 py-2 rounded-xl font-medium text-xs sm:text-sm transition flex items-center gap-1.5 shadow-sm">
+                        <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+                        </svg>
+                        Export JSON
+                    </button>
+                    <label
+                        class="bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-800 hover:border-slate-700 px-3 py-2 rounded-xl font-medium text-xs sm:text-sm transition flex items-center gap-1.5 cursor-pointer shadow-sm"
+                        title="Import ideas from JSON backup">
+                        <svg class="w-4 h-4 text-sky-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path>
+                        </svg>
+                        Import
+                        <input type="file" id="importInput" accept=".json" onchange="importJSON(event)" class="hidden">
+                    </label>
+                </div>
+                <button onclick="openModal()"
+                    class="bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded-xl font-medium text-xs sm:text-sm transition shadow-lg shadow-blue-600/20 flex items-center gap-1.5 shrink-0">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                    </svg>
+                    New Idea
+                </button>
+            </div>
         </header>
+
+        <!-- Controls Toolbar: Interactive Filter Tabs, Search, & Sort (Sticky on scroll) -->
+        <section id="toolbar"
+            class="sticky top-3 z-30 mb-6 bg-slate-900/90 backdrop-blur-md border border-slate-800/90 p-3 sm:p-3.5 rounded-2xl shadow-xl shadow-slate-950/50 transition-all">
+            <div class="flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-3">
+                <!-- Filter Pills with Simple Counts & Color Dots (Never wrap awkwardly) -->
+                <div class="flex items-center gap-1 sm:gap-1.5 p-1 bg-slate-950/80 border border-slate-800/80 rounded-xl overflow-x-auto no-scrollbar shrink-0"
+                    id="filterTabs">
+                    <button onclick="setFilter('all')" id="tab_all"
+                        class="whitespace-nowrap shrink-0 px-2.5 sm:px-3 py-1 rounded-lg text-xs font-medium transition flex items-center gap-1.5 bg-slate-800 text-white shadow-sm border border-slate-700/60">
+                        <span>All</span>
+                        <span id="statTotal"
+                            class="text-[11px] px-1.5 py-0.2 rounded-full bg-slate-700/80 text-slate-200 font-semibold">0</span>
+                    </button>
+                    <button onclick="setFilter('promising')" id="tab_promising"
+                        class="whitespace-nowrap shrink-0 px-2.5 sm:px-3 py-1 rounded-lg text-xs font-medium transition flex items-center gap-1.5 text-slate-400 hover:text-slate-200 hover:bg-slate-900 border border-transparent">
+                        <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+                        <span>Full Speed</span>
+                        <span id="statPromising"
+                            class="text-[11px] px-1.5 py-0.2 rounded-full bg-emerald-500/15 text-emerald-400 font-semibold">0</span>
+                    </button>
+                    <button onclick="setFilter('marginal')" id="tab_marginal"
+                        class="whitespace-nowrap shrink-0 px-2.5 sm:px-3 py-1 rounded-lg text-xs font-medium transition flex items-center gap-1.5 text-slate-400 hover:text-slate-200 hover:bg-slate-900 border border-transparent">
+                        <span class="w-2 h-2 rounded-full bg-amber-400"></span>
+                        <span>Marginal</span>
+                        <span id="statMarginal"
+                            class="text-[11px] px-1.5 py-0.2 rounded-full bg-amber-500/15 text-amber-400 font-semibold">0</span>
+                    </button>
+                    <button onclick="setFilter('kill')" id="tab_kill"
+                        class="whitespace-nowrap shrink-0 px-2.5 sm:px-3 py-1 rounded-lg text-xs font-medium transition flex items-center gap-1.5 text-slate-400 hover:text-slate-200 hover:bg-slate-900 border border-transparent">
+                        <span class="w-2 h-2 rounded-full bg-rose-400"></span>
+                        <span>Kill</span>
+                        <span id="statKill"
+                            class="text-[11px] px-1.5 py-0.2 rounded-full bg-rose-500/15 text-rose-400 font-semibold">0</span>
+                    </button>
+                </div>
+
+                <!-- Search & Sort Controls (Stretches cleanly across on mobile, compact on desktop) -->
+                <div class="flex items-center gap-2 flex-1 lg:max-w-md lg:justify-end">
+                    <!-- Search Input -->
+                    <div class="relative flex-1 min-w-[140px]">
+                        <svg class="w-3.5 h-3.5 text-slate-500 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none"
+                            fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                        </svg>
+                        <input type="text" id="searchInput" oninput="renderIdeas()" placeholder="Search ideas..."
+                            class="w-full bg-slate-950 border border-slate-800 rounded-xl pl-8 pr-3 py-1.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 transition">
+                    </div>
+
+                    <!-- Sort Selector -->
+                    <div class="relative shrink-0">
+                        <select id="sortBy" onchange="renderIdeas()"
+                            class="bg-slate-950 border border-slate-800 text-slate-300 text-xs rounded-xl pl-3 pr-8 py-1.5 focus:outline-none focus:border-blue-500 transition cursor-pointer appearance-none">
+                            <option value="score_desc">Score: High → Low</option>
+                            <option value="score_asc">Score: Low → High</option>
+                            <option value="date_desc">Newest First</option>
+                            <option value="date_asc">Oldest First</option>
+                            <option value="title_asc">Title: A → Z</option>
+                            <option value="title_desc">Title: Z → A</option>
+                        </select>
+                        <svg class="w-3.5 h-3.5 text-slate-500 absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none"
+                            fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7">
+                            </path>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        </section>
 
         <!-- Main Content Area -->
         <main>
-            <div id="emptyState" class="hidden text-center py-20 bg-slate-900/40 rounded-2xl border border-slate-800/80">
-                <p class="text-slate-400 mb-2">No ideas logged yet.</p>
-                <p class="text-xs text-slate-500">Click "New Idea" to run your first market evaluation.</p>
+            <div id="emptyState"
+                class="hidden text-center py-16 bg-slate-900/40 rounded-2xl border border-slate-800/80">
+                <div
+                    class="w-12 h-12 rounded-full bg-blue-500/10 text-blue-400 flex items-center justify-center mx-auto mb-3">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z">
+                        </path>
+                    </svg>
+                </div>
+                <p class="text-slate-300 font-medium mb-1" id="emptyStateTitle">No ideas found</p>
+                <p class="text-xs text-slate-500 mb-4" id="emptyStateSubtitle">Click "New Idea" to evaluate your next
+                    big concept or clear filters.</p>
+                <button onclick="openModal()"
+                    class="inline-flex items-center gap-1.5 bg-blue-600 hover:bg-blue-500 text-white text-xs px-3.5 py-2 rounded-xl transition font-medium">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                    </svg>
+                    Evaluate New Idea
+                </button>
             </div>
             <div id="ideasGrid" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
         </main>
     </div>
 
     <!-- Modal Form -->
-    <div id="ideaModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm hidden z-50 overflow-y-auto px-4 py-6">
-        <div class="max-w-2xl mx-auto bg-slate-900 border border-slate-800 rounded-2xl shadow-2xl overflow-hidden my-auto">
-            <div class="flex justify-between items-center px-6 py-4 border-b border-slate-800">
-                <h2 id="modalTitle" class="text-lg font-semibold text-white">Evaluate New Idea</h2>
-                <button onclick="closeModal()" class="text-slate-400 hover:text-white text-xl">&times;</button>
+    <div id="ideaModal"
+        class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm hidden z-50 overflow-y-auto px-4 py-6 flex items-center justify-center">
+        <div
+            class="max-w-3xl w-full bg-slate-900 border border-slate-800 rounded-2xl shadow-2xl overflow-hidden my-auto flex flex-col max-h-[92vh]">
+            <!-- Modal Header -->
+            <div class="flex justify-between items-center px-6 py-4 border-b border-slate-800 bg-slate-900/90 shrink-0">
+                <div>
+                    <h2 id="modalTitle" class="text-lg font-semibold text-white">Evaluate New Idea</h2>
+                    <p class="text-xs text-slate-400">Score each dimension 0 (worst) to 10 (best) based on Personal MBA
+                        principles.</p>
+                </div>
+                <button onclick="closeModal()"
+                    class="text-slate-400 hover:text-white text-2xl leading-none p-1 transition">&times;</button>
             </div>
-            <form id="ideaForm" onsubmit="saveIdea(event)" class="p-6 space-y-6 max-h-[80vh] overflow-y-auto">
-                <input type="hidden" id="ideaId">
-                <div>
-                    <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">Idea Title</label>
-                    <input type="text" id="title" required class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-blue-500" placeholder="e.g., Airbnb for local events">
-                </div>
-                <div>
-                    <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">Quick Brain Dump / Notes</label>
-                    <textarea id="description" rows="3" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-blue-500" placeholder="Why will this work? Who is it for?"></textarea>
-                </div>
 
-                <div class="border-t border-slate-800 pt-4">
-                    <h3 class="text-sm font-medium text-slate-300 mb-3">The 10-Factor Evaluation (0 to 10 scale)</h3>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <div>
-                            <div class="flex justify-between text-xs text-slate-400 mb-1"><label>1. Urgency</label><span id="val_urgency">5</span></div>
-                            <input type="range" id="urgency" min="0" max="10" value="5" oninput="updateScoreVal('urgency')" class="w-full accent-blue-500">
-                        </div>
-                        <div>
-                            <div class="flex justify-between text-xs text-slate-400 mb-1"><label>2. Market Size</label><span id="val_marketSize">5</span></div>
-                            <input type="range" id="marketSize" min="0" max="10" value="5" oninput="updateScoreVal('marketSize')" class="w-full accent-blue-500">
-                        </div>
-                        <div>
-                            <div class="flex justify-between text-xs text-slate-400 mb-1"><label>3. Pricing Potential</label><span id="val_pricingPotential">5</span></div>
-                            <input type="range" id="pricingPotential" min="0" max="10" value="5" oninput="updateScoreVal('pricingPotential')" class="w-full accent-blue-500">
-                        </div>
-                        <div>
-                            <div class="flex justify-between text-xs text-slate-400 mb-1"><label>4. Customer Acquisition Cost</label><span id="val_cac">5</span></div>
-                            <input type="range" id="cac" min="0" max="10" value="5" oninput="updateScoreVal('cac')" class="w-full accent-blue-500">
-                        </div>
-                        <div>
-                            <div class="flex justify-between text-xs text-slate-400 mb-1"><label>5. Value Delivery Cost</label><span id="val_vdc">5</span></div>
-                            <input type="range" id="vdc" min="0" max="10" value="5" oninput="updateScoreVal('vdc')" class="w-full accent-blue-500">
-                        </div>
-                        <div>
-                            <div class="flex justify-between text-xs text-slate-400 mb-1"><label>6. Uniqueness</label><span id="val_uniqueness">5</span></div>
-                            <input type="range" id="uniqueness" min="0" max="10" value="5" oninput="updateScoreVal('uniqueness')" class="w-full accent-blue-500">
-                        </div>
-                        <div>
-                            <div class="flex justify-between text-xs text-slate-400 mb-1"><label>7. Speed to Market</label><span id="val_speedToMarket">5</span></div>
-                            <input type="range" id="speedToMarket" min="0" max="10" value="5" oninput="updateScoreVal('speedToMarket')" class="w-full accent-blue-500">
-                        </div>
-                        <div>
-                            <div class="flex justify-between text-xs text-slate-400 mb-1"><label>8. Up-front Investment</label><span id="val_upfrontInvestment">5</span></div>
-                            <input type="range" id="upfrontInvestment" min="0" max="10" value="5" oninput="updateScoreVal('upfrontInvestment')" class="w-full accent-blue-500">
-                        </div>
-                        <div>
-                            <div class="flex justify-between text-xs text-slate-400 mb-1"><label>9. Upsell Potential</label><span id="val_upsellPotential">5</span></div>
-                            <input type="range" id="upsellPotential" min="0" max="10" value="5" oninput="updateScoreVal('upsellPotential')" class="w-full accent-blue-500">
-                        </div>
-                        <div>
-                            <div class="flex justify-between text-xs text-slate-400 mb-1"><label>10. Evergreen Potential</label><span id="val_evergreenPotential">5</span></div>
-                            <input type="range" id="evergreenPotential" min="0" max="10" value="5" oninput="updateScoreVal('evergreenPotential')" class="w-full accent-blue-500">
-                        </div>
+            <!-- Form Body -->
+            <form id="ideaForm" onsubmit="saveIdea(event)" class="p-6 space-y-6 overflow-y-auto flex-1">
+                <input type="hidden" id="ideaId">
+                <div class="grid grid-cols-1 gap-4">
+                    <div>
+                        <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1.5">Idea
+                            Title</label>
+                        <input type="text" id="title" required
+                            class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-blue-500 transition"
+                            placeholder="e.g., On-demand AI financial audit tool">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1.5">Quick
+                            Brain Dump / Notes</label>
+                        <textarea id="description" rows="2"
+                            class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2 text-white text-sm focus:outline-none focus:border-blue-500 transition"
+                            placeholder="Why will this work? Who is the ideal customer? Key assumptions..."></textarea>
                     </div>
                 </div>
 
-                <div class="flex justify-end gap-3 pt-4 border-t border-slate-800">
-                    <button type="button" onclick="closeModal()" class="px-4 py-2 rounded-xl text-sm text-slate-400 hover:text-white transition">Cancel</button>
-                    <button type="submit" class="bg-blue-600 hover:bg-blue-500 text-white px-5 py-2 rounded-xl text-sm font-medium transition shadow-lg shadow-blue-600/20">Save Idea</button>
+                <div class="border-t border-slate-800 pt-5">
+                    <div class="mb-4">
+                        <h3 class="text-sm font-semibold text-slate-200">The 10-Factor Market Evaluation</h3>
+                        <p class="text-xs text-slate-400">Higher scores represent favorable market conditions, lower
+                            scores represent headwinds.</p>
+                    </div>
+
+                    <!-- 10 Factors Container -->
+                    <div id="factorsContainer" class="space-y-4">
+                        <!-- Factor items injected via JavaScript -->
+                    </div>
+                </div>
+
+                <div class="flex justify-between items-center pt-5 border-t border-slate-800 shrink-0">
+                    <div class="text-xs text-slate-400">
+                        Total Score: <span id="modalFooterScore" class="font-bold text-white text-sm">50</span> / 100
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <button type="button" onclick="closeModal()"
+                            class="px-4 py-2 rounded-xl text-sm text-slate-400 hover:text-white transition">Cancel</button>
+                        <button type="submit"
+                            class="bg-blue-600 hover:bg-blue-500 text-white px-5 py-2.5 rounded-xl text-sm font-medium transition shadow-lg shadow-blue-600/20 flex items-center gap-1.5">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M5 13l4 4L19 7"></path>
+                            </svg>
+                            Save Idea
+                        </button>
+                    </div>
                 </div>
             </form>
         </div>
     </div>
 
+    <!-- Custom Delete Confirmation Modal -->
+    <div id="deleteModal"
+        class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm hidden z-50 overflow-y-auto px-4 py-6 flex items-center justify-center">
+        <div
+            class="max-w-md w-full bg-slate-900 border border-slate-800 rounded-2xl shadow-2xl overflow-hidden p-6 space-y-4 my-auto">
+            <div class="flex items-center gap-3.5">
+                <div
+                    class="w-10 h-10 rounded-xl bg-rose-500/10 text-rose-400 flex items-center justify-center shrink-0 border border-rose-500/20">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
+                        </path>
+                    </svg>
+                </div>
+                <div>
+                    <h3 class="text-base font-semibold text-white">Move to Graveyard?</h3>
+                    <p class="text-xs text-slate-400">Permanently delete this evaluated idea.</p>
+                </div>
+            </div>
+
+            <p class="text-xs text-slate-300 bg-slate-950/80 border border-slate-800/80 rounded-xl p-3 leading-relaxed">
+                Are you sure you want to delete <strong id="deleteIdeaTitle" class="text-white">this idea</strong>? This
+                cannot be undone.
+            </p>
+
+            <div class="flex items-center justify-end gap-2.5 pt-2">
+                <button type="button" onclick="closeDeleteModal()"
+                    class="px-4 py-2 rounded-xl text-xs sm:text-sm text-slate-400 hover:text-white transition font-medium">Cancel</button>
+                <button type="button" onclick="confirmDeleteIdea()"
+                    class="bg-rose-600 hover:bg-rose-500 text-white px-4 py-2 rounded-xl text-xs sm:text-sm font-medium transition shadow-lg shadow-rose-600/20 flex items-center gap-1.5">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
+                        </path>
+                    </svg>
+                    Delete Idea
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification Toast -->
+    <div id="toast"
+        class="fixed bottom-5 right-5 bg-slate-900 border border-slate-700 text-white text-xs px-4 py-3 rounded-xl shadow-2xl transition-opacity duration-300 opacity-0 pointer-events-none z-50 flex items-center gap-2">
+        <span id="toastMsg">Notification</span>
+    </div>
+
     <script>
-        const factors = ['urgency', 'marketSize', 'pricingPotential', 'cac', 'vdc', 'uniqueness', 'speedToMarket', 'upfrontInvestment', 'upsellPotential', 'evergreenPotential'];
+        // Definitions for the 10 Factors based on "The Personal MBA" by Josh Kaufman
+        const factorDefinitions = [
+            {
+                id: 'urgency',
+                number: 1,
+                name: 'Urgency',
+                prompt: 'How badly do people want or need this right now?',
+                lowScale: '0 = Low priority / "nice to have" / can wait indefinitely',
+                highScale: '10 = Urgent crisis / emergency / immediate burning pain'
+            },
+            {
+                id: 'marketSize',
+                number: 2,
+                name: 'Market Size',
+                prompt: 'How many people are actively purchasing things like this?',
+                lowScale: '0 = Tiny niche / very few potential buyers',
+                highScale: '10 = Massive mass market / millions of active buyers'
+            },
+            {
+                id: 'pricingPotential',
+                number: 3,
+                name: 'Pricing Potential',
+                prompt: 'What is the highest price a typical purchaser will spend for a solution?',
+                lowScale: '0 = Low price / pennies / free alternatives prevail',
+                highScale: '10 = High-ticket / thousands or millions per transaction'
+            },
+            {
+                id: 'cac',
+                number: 4,
+                name: 'Customer Acquisition Cost (CAC)',
+                prompt: 'How easy and inexpensive is it to acquire a new paying customer?',
+                lowScale: '0 = Very expensive / intense sales cycle / hard to find',
+                highScale: '10 = Easy / viral / low cost / customers actively search for you'
+            },
+            {
+                id: 'vdc',
+                number: 5,
+                name: 'Value Delivery Cost',
+                prompt: 'How cheap and simple is it to create and deliver the value offered?',
+                lowScale: '0 = Heavy labor / high inventory & logistics costs',
+                highScale: '10 = Automated / digital / zero marginal delivery cost'
+            },
+            {
+                id: 'uniqueness',
+                number: 6,
+                name: 'Uniqueness of Offer',
+                prompt: 'How unique is your offer and how hard is it for competitors to copy you?',
+                lowScale: '0 = Commodity / saturated with identical alternatives',
+                highScale: '10 = Highly unique / strong moat / very hard to copy'
+            },
+            {
+                id: 'speedToMarket',
+                number: 7,
+                name: 'Speed to Market',
+                prompt: 'How quickly can you build something viable and start selling?',
+                lowScale: '0 = Takes years of R&D / heavy regulatory hurdles',
+                highScale: '10 = Can build & launch in days or a few weeks'
+            },
+            {
+                id: 'upfrontInvestment',
+                number: 8,
+                name: 'Up-Front Investment',
+                prompt: 'How little capital and resources do you need before ready to launch?',
+                lowScale: '0 = Needs massive capital / heavy funding / expensive tooling',
+                highScale: '10 = Bootstrap / almost zero capital required to start'
+            },
+            {
+                id: 'upsellPotential',
+                number: 9,
+                name: 'Upsell Potential',
+                prompt: 'Are there related secondary offers or recurring services to present to buyers?',
+                lowScale: '0 = One-and-done purchase / zero repeat transactions',
+                highScale: '10 = Endless upsells, cross-sells, or recurring subscriptions'
+            },
+            {
+                id: 'evergreenPotential',
+                number: 10,
+                name: 'Evergreen Potential',
+                prompt: 'Once the initial offer is created, how little continuous rework is required to keep selling?',
+                lowScale: '0 = High maintenance / constant custom manual work',
+                highScale: '10 = Build once, sell forever with minimal ongoing effort'
+            }
+        ];
+
+        const factorKeys = factorDefinitions.map(f => f.id);
         let ideas = JSON.parse(localStorage.getItem('pwa_ideas') || '[]');
+        let currentFilter = 'all'; // 'all', 'promising', 'marginal', 'kill'
+
+        // Build factor UI in modal
+        function initFactorsUI() {
+            const container = document.getElementById('factorsContainer');
+            container.innerHTML = factorDefinitions.map(f => `
+                <div class="bg-slate-950/70 border border-slate-800/80 rounded-xl p-4 hover:border-slate-700 transition">
+                    <div class="flex items-center justify-between gap-2 mb-1">
+                        <div class="flex items-center gap-2">
+                            <span class="text-xs font-semibold text-blue-400 bg-blue-500/10 px-2 py-0.5 rounded-md">${f.number}</span>
+                            <label for="${f.id}" class="text-sm font-medium text-slate-200">${f.name}</label>
+                        </div>
+                        <div class="flex items-center gap-1.5">
+                            <span class="text-xs text-slate-400">Score:</span>
+                            <span id="val_${f.id}" class="text-xs font-bold text-white bg-slate-800 px-2.5 py-0.5 rounded-md min-w-[28px] text-center">5</span>
+                        </div>
+                    </div>
+                    <p class="text-xs text-slate-400 mb-2.5">${f.prompt}</p>
+                    <input type="range" id="${f.id}" min="0" max="10" value="5" oninput="updateScoreVal('${f.id}')" class="w-full mb-2 cursor-pointer">
+                    <div class="flex justify-between items-center text-[10px] text-slate-500 gap-2">
+                        <span class="truncate" title="${escapeHtml(f.lowScale)}">${f.lowScale}</span>
+                        <span class="truncate text-right" title="${escapeHtml(f.highScale)}">${f.highScale}</span>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        initFactorsUI();
 
         function updateScoreVal(factor) {
-            document.getElementById(`val_${factor}`).innerText = document.getElementById(factor).value;
+            const val = document.getElementById(factor).value;
+            const badge = document.getElementById(`val_${factor}`);
+            badge.innerText = val;
+
+            // Color code the individual score badge
+            if (val >= 8) {
+                badge.className = 'text-xs font-bold text-emerald-400 bg-emerald-500/15 px-2.5 py-0.5 rounded-md min-w-[28px] text-center';
+            } else if (val >= 5) {
+                badge.className = 'text-xs font-bold text-blue-400 bg-blue-500/15 px-2.5 py-0.5 rounded-md min-w-[28px] text-center';
+            } else {
+                badge.className = 'text-xs font-bold text-slate-300 bg-slate-800 px-2.5 py-0.5 rounded-md min-w-[28px] text-center';
+            }
+
+            recalcModalTotal();
+        }
+
+        function recalcModalTotal() {
+            let total = 0;
+            factorKeys.forEach(f => {
+                const el = document.getElementById(f);
+                if (el) total += parseInt(el.value || 0);
+            });
+
+            const footerScore = document.getElementById('modalFooterScore');
+            if (footerScore) footerScore.innerText = total;
+        }
+
+        function setFilter(filter) {
+            currentFilter = filter;
+            updateFilterTabsUI();
+            renderIdeas();
+        }
+
+        function updateFilterTabsUI() {
+            const tabs = ['all', 'promising', 'marginal', 'kill'];
+            tabs.forEach(t => {
+                const btn = document.getElementById(`tab_${t}`);
+                if (!btn) return;
+                if (currentFilter === t) {
+                    btn.className = 'whitespace-nowrap shrink-0 px-2.5 sm:px-3 py-1 rounded-lg text-xs font-medium transition flex items-center gap-1.5 bg-slate-800 text-white shadow-sm border border-slate-700/60';
+                } else {
+                    btn.className = 'whitespace-nowrap shrink-0 px-2.5 sm:px-3 py-1 rounded-lg text-xs font-medium transition flex items-center gap-1.5 text-slate-400 hover:text-slate-200 hover:bg-slate-900 border border-transparent';
+                }
+            });
         }
 
         function openModal(id = null) {
             document.getElementById('ideaModal').classList.remove('hidden');
-            if (id) {
-                const idea = ideas.find(i => i.id === id);
-                document.getElementById('modalTitle').innerText = 'Edit Idea';
+            if (id !== null && id !== undefined && id !== '') {
+                const idStr = String(id);
+                const idea = ideas.find(i => String(i.id) === idStr);
+                if (!idea) return;
+                document.getElementById('modalTitle').innerText = 'Edit Idea Evaluation';
                 document.getElementById('ideaId').value = idea.id;
-                document.getElementById('title').value = idea.title;
-                document.getElementById('description').value = idea.description;
-                factors.forEach(f => {
-                    document.getElementById(f).value = idea.scores[f];
+                document.getElementById('title').value = idea.title || '';
+                document.getElementById('description').value = idea.description || '';
+                factorKeys.forEach(f => {
+                    const val = (idea.scores && idea.scores[f] !== undefined) ? idea.scores[f] : 5;
+                    document.getElementById(f).value = val;
                     updateScoreVal(f);
                 });
             } else {
                 document.getElementById('modalTitle').innerText = 'Evaluate New Idea';
                 document.getElementById('ideaForm').reset();
-                factors.forEach(f => updateScoreVal(f));
                 document.getElementById('ideaId').value = '';
+                factorKeys.forEach(f => {
+                    document.getElementById(f).value = 5;
+                    updateScoreVal(f);
+                });
             }
+            recalcModalTotal();
         }
 
         function closeModal() {
@@ -139,87 +516,356 @@
 
         function saveIdea(e) {
             e.preventDefault();
-            const id = document.getElementById('ideaId').value || Date.now().toString();
-            const title = document.getElementById('title').value;
-            const description = document.getElementById('description').value;
-            
+            const id = document.getElementById('ideaId').value || ('idea_' + Date.now());
+            const title = document.getElementById('title').value.trim();
+            const description = document.getElementById('description').value.trim();
+
             let scores = {};
             let totalScore = 0;
-            factors.forEach(f => {
+            factorKeys.forEach(f => {
                 const val = parseInt(document.getElementById(f).value);
                 scores[f] = val;
                 totalScore += val;
             });
 
-            const ideaData = { id, title, description, scores, totalScore, date: new Date().toLocaleDateString() };
-            
-            const index = ideas.findIndex(i => i.id === id);
-            if (index > -1) ideas[index] = ideaData;
-            else ideas.unshift(ideaData);
+            const idStr = String(id);
+            const existingIndex = ideas.findIndex(i => String(i.id) === idStr);
+            const now = new Date();
+            const ideaData = {
+                id,
+                title,
+                description,
+                scores,
+                totalScore,
+                createdAt: (existingIndex > -1 && ideas[existingIndex].createdAt) ? ideas[existingIndex].createdAt : Date.now(),
+                date: (existingIndex > -1 && ideas[existingIndex].date) ? ideas[existingIndex].date : now.toLocaleDateString(),
+                updatedAt: Date.now()
+            };
 
-            localStorage.setItem('pwa_ideas', JSON.stringify(ideas));
+            if (existingIndex > -1) {
+                ideas[existingIndex] = ideaData;
+                showToast('Idea updated successfully!');
+            } else {
+                ideas.unshift(ideaData);
+                showToast('New idea evaluated and saved!');
+            }
+
+            saveToStorage();
             closeModal();
             renderIdeas();
         }
 
+        let pendingDeleteId = null;
+
+        function promptDeleteIdea(id) {
+            if (!id && id !== 0) return;
+            pendingDeleteId = String(id);
+            const idea = ideas.find(i => String(i.id) === pendingDeleteId);
+            const title = idea ? idea.title : 'this idea';
+
+            const titleEl = document.getElementById('deleteIdeaTitle');
+            if (titleEl) titleEl.innerText = `"${title}"`;
+            document.getElementById('deleteModal').classList.remove('hidden');
+        }
+
+        function closeDeleteModal() {
+            pendingDeleteId = null;
+            document.getElementById('deleteModal').classList.add('hidden');
+        }
+
+        function confirmDeleteIdea() {
+            if (!pendingDeleteId && pendingDeleteId !== '0') return;
+            const targetId = pendingDeleteId;
+            ideas = ideas.filter(i => String(i.id) !== targetId);
+            saveToStorage();
+            closeDeleteModal();
+            renderIdeas();
+            showToast('Idea moved to graveyard.');
+        }
+
         function deleteIdea(id) {
-            if (confirm('Trash this idea permanently?')) {
-                ideas = ideas.filter(i => i.id !== id);
-                localStorage.setItem('pwa_ideas', JSON.stringify(ideas));
-                renderIdeas();
+            promptDeleteIdea(id);
+        }
+
+        function duplicateIdea(id) {
+            if (!id && id !== 0) return;
+            const idStr = String(id);
+            const orig = ideas.find(i => String(i.id) === idStr);
+            if (!orig) return;
+            const newIdea = {
+                ...orig,
+                id: 'idea_' + Date.now(),
+                title: `${orig.title} (Copy)`,
+                createdAt: Date.now(),
+                date: new Date().toLocaleDateString(),
+                updatedAt: Date.now()
+            };
+            ideas.unshift(newIdea);
+            saveToStorage();
+            renderIdeas();
+            showToast('Idea duplicated!');
+        }
+
+        function saveToStorage() {
+            localStorage.setItem('pwa_ideas', JSON.stringify(ideas));
+        }
+
+        // Export ideas as JSON file
+        function exportJSON() {
+            if (ideas.length === 0) {
+                showToast('No ideas to export yet.');
+                return;
             }
+
+            const exportPayload = {
+                app: 'IdeaVault - Personal MBA 10-Factor Evaluator',
+                exportedAt: new Date().toISOString(),
+                totalCount: ideas.length,
+                ideas: ideas
+            };
+
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(exportPayload, null, 2));
+            const downloadAnchor = document.createElement('a');
+            const dateTag = new Date().toISOString().slice(0, 10);
+            downloadAnchor.setAttribute("href", dataStr);
+            downloadAnchor.setAttribute("download", `ideavault-export-${dateTag}.json`);
+            document.body.appendChild(downloadAnchor);
+            downloadAnchor.click();
+            downloadAnchor.remove();
+            showToast(`Exported ${ideas.length} ideas to JSON!`);
+        }
+
+        // Import ideas from JSON file
+        function importJSON(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                try {
+                    const parsed = JSON.parse(e.target.result);
+                    let importedList = [];
+
+                    if (Array.isArray(parsed)) {
+                        importedList = parsed;
+                    } else if (parsed && Array.isArray(parsed.ideas)) {
+                        importedList = parsed.ideas;
+                    } else {
+                        throw new Error('Unrecognized JSON structure');
+                    }
+
+                    // Validate & normalize items
+                    let addedCount = 0;
+                    importedList.forEach(item => {
+                        if (!item.title) return;
+                        const validId = item.id || ('idea_' + Date.now() + '_' + Math.random().toString(36).substr(2, 4));
+                        const scores = item.scores || {};
+                        let total = 0;
+                        factorKeys.forEach(k => {
+                            scores[k] = (typeof scores[k] === 'number') ? scores[k] : 5;
+                            total += scores[k];
+                        });
+
+                        const normalized = {
+                            id: validId,
+                            title: item.title,
+                            description: item.description || '',
+                            scores: scores,
+                            totalScore: item.totalScore || total,
+                            createdAt: item.createdAt || Date.now(),
+                            date: item.date || new Date().toLocaleDateString(),
+                            updatedAt: item.updatedAt || Date.now()
+                        };
+
+                        const existingIdx = ideas.findIndex(i => i.id === normalized.id);
+                        if (existingIdx > -1) {
+                            ideas[existingIdx] = normalized;
+                        } else {
+                            ideas.push(normalized);
+                        }
+                        addedCount++;
+                    });
+
+                    saveToStorage();
+                    renderIdeas();
+                    showToast(`Successfully imported ${addedCount} ideas!`);
+                } catch (err) {
+                    alert('Invalid JSON file format. Please provide a valid IdeaVault JSON backup.');
+                }
+                event.target.value = ''; // Reset input
+            };
+            reader.readAsText(file);
+        }
+
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toastMsg').innerText = message;
+            toast.classList.remove('opacity-0', 'pointer-events-none');
+            setTimeout(() => {
+                toast.classList.add('opacity-0', 'pointer-events-none');
+            }, 3000);
+        }
+
+        function getSortedAndFilteredIdeas() {
+            const search = (document.getElementById('searchInput')?.value || '').toLowerCase().trim();
+            const sortBy = document.getElementById('sortBy')?.value || 'score_desc';
+
+            let filtered = ideas.filter(idea => {
+                // Filter tabs
+                if (currentFilter === 'promising' && (idea.totalScore || 0) <= 75) return false;
+                if (currentFilter === 'marginal' && ((idea.totalScore || 0) <= 50 || (idea.totalScore || 0) > 75)) return false;
+                if (currentFilter === 'kill' && (idea.totalScore || 0) > 50) return false;
+
+                // Search query
+                if (search) {
+                    const matchTitle = (idea.title || '').toLowerCase().includes(search);
+                    const matchDesc = (idea.description || '').toLowerCase().includes(search);
+                    if (!matchTitle && !matchDesc) return false;
+                }
+                return true;
+            });
+
+            filtered.sort((a, b) => {
+                switch (sortBy) {
+                    case 'score_desc':
+                        return (b.totalScore || 0) - (a.totalScore || 0);
+                    case 'score_asc':
+                        return (a.totalScore || 0) - (b.totalScore || 0);
+                    case 'date_desc':
+                        return (b.createdAt || 0) - (a.createdAt || 0);
+                    case 'date_asc':
+                        return (a.createdAt || 0) - (b.createdAt || 0);
+                    case 'title_asc':
+                        return (a.title || '').localeCompare(b.title || '');
+                    case 'title_desc':
+                        return (b.title || '').localeCompare(a.title || '');
+                    default:
+                        return 0;
+                }
+            });
+
+            return filtered;
+        }
+
+        function updateStats() {
+            const total = ideas.length;
+            const promising = ideas.filter(i => (i.totalScore || 0) > 75).length;
+            const marginal = ideas.filter(i => (i.totalScore || 0) > 50 && (i.totalScore || 0) <= 75).length;
+            const kill = ideas.filter(i => (i.totalScore || 0) <= 50).length;
+
+            document.getElementById('statTotal').innerText = total;
+            document.getElementById('statPromising').innerText = promising;
+            document.getElementById('statMarginal').innerText = marginal;
+            document.getElementById('statKill').innerText = kill;
         }
 
         function renderIdeas() {
             const grid = document.getElementById('ideasGrid');
             const emptyState = document.getElementById('emptyState');
+            updateStats();
+            updateFilterTabsUI();
+
+            const displayList = getSortedAndFilteredIdeas();
             grid.innerHTML = '';
 
-            if (ideas.length === 0) {
+            // Show empty search state if search yields no results
+            if (displayList.length === 0 && ideas.length > 0) {
                 emptyState.classList.remove('hidden');
-                return;
+                document.getElementById('emptyStateTitle').innerText = 'No matching ideas';
+                document.getElementById('emptyStateSubtitle').innerText = 'Try selecting "All" or clearing your search filters.';
+            } else {
+                emptyState.classList.add('hidden');
             }
-            emptyState.classList.add('hidden');
 
-            ideas.forEach(idea => {
+            displayList.forEach(idea => {
                 let badgeColor = 'bg-rose-500/10 text-rose-400 border-rose-500/20';
-                let verdict = 'Kill Idea (≤50)';
+                let dotColor = 'bg-rose-400';
+                let verdict = 'Kill';
+                let verdictColor = 'text-rose-400';
+
                 if (idea.totalScore > 75) {
                     badgeColor = 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20';
-                    verdict = 'Full Speed Ahead (>75)';
+                    dotColor = 'bg-emerald-400';
+                    verdict = 'Full Speed';
+                    verdictColor = 'text-emerald-400';
                 } else if (idea.totalScore > 50) {
                     badgeColor = 'bg-amber-500/10 text-amber-400 border-amber-500/20';
-                    verdict = 'Marginal / Pay Bills (51-75)';
+                    dotColor = 'bg-amber-400';
+                    verdict = 'Marginal';
+                    verdictColor = 'text-amber-400';
+                }
+
+                // Mini score breakdown tags (top 3 highest factors)
+                let factorPills = '';
+                if (idea.scores) {
+                    const topFactors = factorDefinitions
+                        .map(f => ({ name: f.name, score: idea.scores[f.id] || 0 }))
+                        .sort((a, b) => b.score - a.score)
+                        .slice(0, 3);
+
+                    factorPills = topFactors.map(tf => `
+                        <span class="inline-flex items-center gap-1 text-[10px] bg-slate-800/80 text-slate-300 px-2 py-0.5 rounded-md border border-slate-700/50">
+                            ${tf.name}: <strong class="text-white">${tf.score}/10</strong>
+                        </span>
+                    `).join('');
                 }
 
                 const card = document.createElement('div');
-                card.className = 'bg-slate-900/60 border border-slate-800/80 rounded-2xl p-5 flex flex-col justify-between hover:border-slate-700 transition';
+                card.className = 'bg-slate-900/70 border border-slate-800/90 rounded-2xl p-5 flex flex-col justify-between hover:border-slate-700 hover:bg-slate-900/90 transition shadow-sm';
                 card.innerHTML = `
                     <div>
                         <div class="flex justify-between items-start gap-3 mb-2">
-                            <h3 class="font-semibold text-white text-base">${escapeHtml(idea.title)}</h3>
-                            <span class="px-2.5 py-1 rounded-full text-xs font-medium border ${badgeColor}">Score: ${idea.totalScore}/100</span>
+                            <h3 class="font-semibold text-white text-base leading-snug">${escapeHtml(idea.title)}</h3>
+                            <span class="px-2.5 py-1 rounded-full text-xs font-bold border shrink-0 ${badgeColor}">${idea.totalScore}/100</span>
                         </div>
-                        <p class="text-xs text-slate-400 mb-4 line-clamp-2">${escapeHtml(idea.description || 'No additional notes provided.')}</p>
-                        <div class="text-[11px] font-medium text-slate-400 mb-4 uppercase tracking-wider">${verdict}</div>
+                        <p class="text-xs text-slate-400 mb-3 line-clamp-3 leading-relaxed">${escapeHtml(idea.description || 'No additional notes provided.')}</p>
+                        
+                        <div class="flex items-center gap-1.5 mb-3 text-xs font-medium ${verdictColor}">
+                            <span class="w-2 h-2 rounded-full ${dotColor}"></span>
+                            <span>${verdict}</span>
+                        </div>
+
+                        ${factorPills ? `<div class="flex flex-wrap gap-1.5 mb-4">${factorPills}</div>` : ''}
                     </div>
-                    <div class="flex justify-between items-center pt-3 border-t border-slate-800/60 text-xs text-slate-500">
-                        <span>Added: ${idea.date}</span>
-                        <div class="flex gap-2">
-                            <button onclick="openModal('${idea.id}')" class="hover:text-blue-400 transition">Edit</button>
-                            <button onclick="deleteIdea('${idea.id}')" class="hover:text-rose-400 transition">Trash</button>
+
+                    <div class="flex justify-between items-center pt-3 border-t border-slate-800/80 text-xs text-slate-500">
+                        <span>Added: ${idea.date || 'Recent'}</span>
+                        <div class="flex items-center gap-3">
+                            <button onclick="duplicateIdea('${escapeHtml(String(idea.id))}')" title="Duplicate Idea" class="hover:text-slate-300 transition">Copy</button>
+                            <button onclick="openModal('${escapeHtml(String(idea.id))}')" title="Edit Scores" class="hover:text-blue-400 transition font-medium">Edit</button>
+                            <button onclick="deleteIdea('${escapeHtml(String(idea.id))}')" title="Delete Idea" class="hover:text-rose-400 transition font-medium">Trash</button>
                         </div>
                     </div>
                 `;
                 grid.appendChild(card);
             });
+
+            // Always append a placeholder card at the end of the grid
+            const placeholderCard = document.createElement('div');
+            placeholderCard.onclick = () => openModal();
+            placeholderCard.className = 'bg-slate-900/30 border-2 border-dashed border-slate-800/90 hover:border-blue-500/50 hover:bg-slate-900/60 rounded-2xl p-6 flex flex-col items-center justify-center text-center transition cursor-pointer group min-h-[200px] shadow-sm';
+            placeholderCard.innerHTML = `
+                <div class="w-12 h-12 rounded-2xl bg-blue-500/10 text-blue-400 group-hover:bg-blue-600 group-hover:text-white flex items-center justify-center mb-3 transition shadow-sm">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                </div>
+                <h3 class="font-semibold text-white text-sm mb-1 group-hover:text-blue-400 transition">Evaluate New Idea</h3>
+                <p class="text-xs text-slate-500 max-w-xs leading-relaxed mb-3">Score your next concept against the 10 Personal MBA market factors</p>
+                <span class="inline-flex items-center gap-1.5 text-xs font-medium text-blue-400 bg-blue-500/10 px-3 py-1.5 rounded-xl border border-blue-500/20 group-hover:bg-blue-600 group-hover:text-white transition">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                    New Evaluation
+                </span>
+            `;
+            grid.appendChild(placeholderCard);
         }
 
         function escapeHtml(str) {
-            return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+            if (!str) return '';
+            return String(str).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
         }
 
+        // Initialize display
         renderIdeas();
     </script>
 </body>
+
 </html>
