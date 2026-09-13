@@ -5,17 +5,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>IdeaVault Pro — Professional Venture & Idea Evaluation Platform</title>
-    <meta name="description"
-        content="Evaluate, stress-test, and prioritize startup concepts and business ideas with a comprehensive 10-pillar viability framework, research logs, and executive reports.">
+    <meta name="description" content="Evaluate, stress-test, and prioritize startup concepts and business ideas with a comprehensive 10-pillar viability framework, research logs, and executive reports.">
     <link rel="manifest"
         href="data:application/manifest+json;charset=utf-8,%7B%22name%22%3A%22IdeaVault%20Pro%22%2C%22short_name%22%3A%22IdeaVault%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%23090d16%22%2C%22theme_color%22%3A%22%232563eb%22%7D">
-
+    
     <!-- Google Fonts: Plus Jakarta Sans -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
-        rel="stylesheet">
-
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -44,7 +42,7 @@
             }
         }
     </script>
-
+    
     <!-- Chart.js for Radar Footprint & Visual Analytics -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
@@ -89,7 +87,6 @@
         .no-scrollbar::-webkit-scrollbar {
             display: none;
         }
-
         .no-scrollbar {
             -ms-overflow-style: none;
             scrollbar-width: none;
@@ -103,7 +100,7 @@
             }
 
             /* Hide everything outside the active report modal */
-            body>*:not(#reportModal),
+            body > *:not(#reportModal),
             header,
             #toolbar,
             main,
@@ -114,8 +111,7 @@
                 display: none !important;
             }
 
-            html,
-            body {
+            html, body {
                 background: #ffffff !important;
                 color: #0f172a !important;
                 height: auto !important;
@@ -145,7 +141,7 @@
                 z-index: auto !important;
             }
 
-            #reportModal>div {
+            #reportModal > div {
                 position: static !important;
                 display: block !important;
                 width: 100% !important;
@@ -198,236 +194,180 @@
     </style>
 </head>
 
-<body class="bg-slate-950 text-slate-100 min-h-screen font-sans selection:bg-blue-500 selection:text-white">
-    <div class="max-w-5xl mx-auto px-4 py-8">
-        <!-- Header -->
-        <header
-            class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 pb-6 border-b border-slate-800 gap-4">
-            <div class="space-y-0.5">
-                <h1 class="text-2xl font-bold tracking-tight text-white flex items-center gap-2">
-                    <svg class="w-7 h-7 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10">
-                        </path>
-                    </svg>
-                    Idea Vault
-                </h1>
-                <p class="text-xs sm:text-sm text-slate-400">10-Factor Market Evaluation Framework</p>
-            </div>
-            <!-- Action buttons: Export & Import on the left, New Idea on the right in mobile view -->
-            <div class="flex items-center justify-between sm:justify-end gap-2 w-full sm:w-auto sm:ml-auto">
-                <div class="flex items-center gap-2">
-                    <button onclick="exportJSON()" id="exportBtn" title="Export ideas as JSON file"
-                        class="bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-800 hover:border-slate-700 px-3 py-2 rounded-xl font-medium text-xs sm:text-sm transition flex items-center gap-1.5 shadow-sm">
-                        <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+<body class="bg-[#0b1120] text-slate-100 min-h-screen font-sans selection:bg-blue-500 selection:text-white antialiased">
+    <div class="max-w-6xl mx-auto px-4 py-6 sm:py-8">
+        
+        <!-- App Header -->
+        <header class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 pb-6 border-b border-slate-800/80 gap-4">
+            <div class="space-y-1">
+                <div class="flex items-center gap-2.5">
+                    <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-500 flex items-center justify-center shadow-lg shadow-blue-500/20">
+                        <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
                         </svg>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <h1 class="text-2xl font-bold tracking-tight text-white">IdeaVault <span class="text-blue-400 font-semibold text-sm bg-blue-500/10 px-2 py-0.5 rounded-md border border-blue-500/20">PRO</span></h1>
+                    </div>
                 </div>
-                <div class="flex items-center gap-2">
-                    <h1 class="text-2xl font-bold tracking-tight text-white">IdeaVault <span
-                            class="text-blue-400 font-semibold text-sm bg-blue-500/10 px-2 py-0.5 rounded-md border border-blue-500/20">PRO</span>
-                    </h1>
-                </div>
-            </div>
-            <p class="text-xs sm:text-sm text-slate-400">10-Pillar Market Viability & Venture Evaluation Framework</p>
-    </div>
-
-    <!-- Action Toolbar: Import, Export, + New Idea -->
-    <div class="flex flex-wrap items-center gap-2.5 w-full md:w-auto justify-start md:justify-end">
-        <button onclick="exportJSON()" title="Export all ideas as a JSON backup"
-            class="bg-slate-900/90 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-800 hover:border-slate-700 px-3.5 py-2 rounded-xl font-medium text-xs sm:text-sm transition flex items-center gap-2 shadow-sm">
-            <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
-            </svg>
-            Export JSON
-        </button>
-        <label
-            class="bg-slate-900/90 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-800 hover:border-slate-700 px-3.5 py-2 rounded-xl font-medium text-xs sm:text-sm transition flex items-center gap-2 cursor-pointer shadow-sm"
-            title="Import ideas from JSON backup">
-            <svg class="w-4 h-4 text-sky-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path>
-            </svg>
-            Import
-            <input type="file" id="importInput" accept=".json" onchange="importJSON(event)" class="hidden">
-        </label>
-        <button onclick="openWizard()"
-            class="bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded-xl font-semibold text-xs sm:text-sm transition shadow-lg shadow-blue-600/25 flex items-center gap-2">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
-            </svg>
-            Evaluate New Idea
-        </button>
-    </div>
-    </header>
-
-    <!-- Sticky Filter & Search Toolbar -->
-    <section id="toolbar"
-        class="sticky top-3 z-30 mb-6 bg-slate-900/90 backdrop-blur-md border border-slate-800/90 p-3 sm:p-3.5 rounded-2xl shadow-xl shadow-slate-950/60 transition-all">
-        <div class="flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-3">
-            <!-- Filter Pills -->
-            <div class="flex items-center gap-1.5 p-1 bg-slate-950/90 border border-slate-800/80 rounded-xl overflow-x-auto no-scrollbar shrink-0"
-                id="filterTabs">
-                <button onclick="setFilter('all')" id="tab_all"
-                    class="whitespace-nowrap shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium transition flex items-center gap-1.5 bg-slate-800 text-white shadow-sm border border-slate-700">
-                    <span>All Concepts</span>
-                    <span id="statTotal"
-                        class="text-[11px] px-1.5 py-0.2 rounded-full bg-slate-700 text-slate-200 font-semibold">0</span>
-                </button>
-                <button onclick="setFilter('completed')" id="tab_completed"
-                    class="whitespace-nowrap shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium transition flex items-center gap-1.5 text-slate-400 hover:text-slate-200 hover:bg-slate-900 border border-transparent">
-                    <span class="w-2 h-2 rounded-full bg-blue-400"></span>
-                    <span>100% Evaluated</span>
-                    <span id="statCompleted"
-                        class="text-[11px] px-1.5 py-0.2 rounded-full bg-blue-500/15 text-blue-400 font-semibold">0</span>
-                </button>
-                <button onclick="setFilter('drafts')" id="tab_drafts"
-                    class="whitespace-nowrap shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium transition flex items-center gap-1.5 text-slate-400 hover:text-slate-200 hover:bg-slate-900 border border-transparent">
-                    <span class="w-2 h-2 rounded-full bg-purple-400"></span>
-                    <span>Drafts / In Progress</span>
-                    <span id="statDrafts"
-                        class="text-[11px] px-1.5 py-0.2 rounded-full bg-purple-500/15 text-purple-400 font-semibold">0</span>
-                </button>
-                <button onclick="setFilter('promising')" id="tab_promising"
-                    class="whitespace-nowrap shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium transition flex items-center gap-1.5 text-slate-400 hover:text-slate-200 hover:bg-slate-900 border border-transparent">
-                    <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
-                    <span>Great</span>
-                    <span id="statPromising"
-                        class="text-[11px] px-1.5 py-0.2 rounded-full bg-emerald-500/15 text-emerald-400 font-semibold">0</span>
-                </button>
-                <button onclick="setFilter('marginal')" id="tab_marginal"
-                    class="whitespace-nowrap shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium transition flex items-center gap-1.5 text-slate-400 hover:text-slate-200 hover:bg-slate-900 border border-transparent">
-                    <span class="w-2 h-2 rounded-full bg-amber-400"></span>
-                    <span>Marginal (50-74)</span>
-                    <span id="statMarginal"
-                        class="text-[11px] px-1.5 py-0.2 rounded-full bg-amber-500/15 text-amber-400 font-semibold">0</span>
-                </button>
-                <button onclick="setFilter('kill')" id="tab_kill"
-                    class="whitespace-nowrap shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium transition flex items-center gap-1.5 text-slate-400 hover:text-slate-200 hover:bg-slate-900 border border-transparent">
-                    <span class="w-2 h-2 rounded-full bg-rose-400"></span>
-                    <span>High Risk (&le;50)</span>
-                    <span id="statKill"
-                        class="text-[11px] px-1.5 py-0.2 rounded-full bg-rose-500/15 text-rose-400 font-semibold">0</span>
-                </button>
+                <p class="text-xs sm:text-sm text-slate-400">10-Pillar Market Viability & Venture Evaluation Framework</p>
             </div>
 
-            <!-- Search & Sort Controls -->
-            <div class="flex items-center gap-2 flex-1 lg:max-w-md lg:justify-end">
-                <div class="relative flex-1 min-w-[140px]">
-                    <svg class="w-3.5 h-3.5 text-slate-500 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none"
-                        fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+            <!-- Action Toolbar: Import, Export, + New Idea -->
+            <div class="flex flex-wrap items-center gap-2.5 w-full md:w-auto justify-start md:justify-end">
+                <button onclick="exportJSON()" title="Export all ideas as a JSON backup"
+                    class="bg-slate-900/90 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-800 hover:border-slate-700 px-3.5 py-2 rounded-xl font-medium text-xs sm:text-sm transition flex items-center gap-2 shadow-sm">
+                    <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
                     </svg>
-                    <input type="text" id="searchInput" oninput="renderIdeas()"
-                        placeholder="Search title, problem, category..."
-                        class="w-full bg-slate-950 border border-slate-800 rounded-xl pl-8 pr-3 py-1.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 transition">
+                    Export JSON
+                </button>
+                <label class="bg-slate-900/90 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-800 hover:border-slate-700 px-3.5 py-2 rounded-xl font-medium text-xs sm:text-sm transition flex items-center gap-2 cursor-pointer shadow-sm"
+                    title="Import ideas from JSON backup">
+                    <svg class="w-4 h-4 text-sky-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path>
+                    </svg>
+                    Import
+                    <input type="file" id="importInput" accept=".json" onchange="importJSON(event)" class="hidden">
+                </label>
+                <button onclick="openWizard()"
+                    class="bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded-xl font-semibold text-xs sm:text-sm transition shadow-lg shadow-blue-600/25 flex items-center gap-2">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                    </svg>
+                    Evaluate New Idea
+                </button>
+            </div>
+        </header>
+
+        <!-- Sticky Filter & Search Toolbar -->
+        <section id="toolbar" class="sticky top-3 z-30 mb-6 bg-slate-900/90 backdrop-blur-md border border-slate-800/90 p-3 sm:p-3.5 rounded-2xl shadow-xl shadow-slate-950/60 transition-all">
+            <div class="flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-3">
+                <!-- Filter Pills -->
+                <div class="flex items-center gap-1.5 p-1 bg-slate-950/90 border border-slate-800/80 rounded-xl overflow-x-auto no-scrollbar shrink-0" id="filterTabs">
+                    <button onclick="setFilter('all')" id="tab_all"
+                        class="whitespace-nowrap shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium transition flex items-center gap-1.5 bg-slate-800 text-white shadow-sm border border-slate-700">
+                        <span>All Concepts</span>
+                        <span id="statTotal" class="text-[11px] px-1.5 py-0.2 rounded-full bg-slate-700 text-slate-200 font-semibold">0</span>
+                    </button>
+                    <button onclick="setFilter('completed')" id="tab_completed"
+                        class="whitespace-nowrap shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium transition flex items-center gap-1.5 text-slate-400 hover:text-slate-200 hover:bg-slate-900 border border-transparent">
+                        <span class="w-2 h-2 rounded-full bg-blue-400"></span>
+                        <span>100% Evaluated</span>
+                        <span id="statCompleted" class="text-[11px] px-1.5 py-0.2 rounded-full bg-blue-500/15 text-blue-400 font-semibold">0</span>
+                    </button>
+                    <button onclick="setFilter('drafts')" id="tab_drafts"
+                        class="whitespace-nowrap shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium transition flex items-center gap-1.5 text-slate-400 hover:text-slate-200 hover:bg-slate-900 border border-transparent">
+                        <span class="w-2 h-2 rounded-full bg-purple-400"></span>
+                        <span>Drafts / In Progress</span>
+                        <span id="statDrafts" class="text-[11px] px-1.5 py-0.2 rounded-full bg-purple-500/15 text-purple-400 font-semibold">0</span>
+                    </button>
+                    <button onclick="setFilter('promising')" id="tab_promising"
+                        class="whitespace-nowrap shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium transition flex items-center gap-1.5 text-slate-400 hover:text-slate-200 hover:bg-slate-900 border border-transparent">
+                        <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+                        <span>High Potential (75+)</span>
+                        <span id="statPromising" class="text-[11px] px-1.5 py-0.2 rounded-full bg-emerald-500/15 text-emerald-400 font-semibold">0</span>
+                    </button>
+                    <button onclick="setFilter('marginal')" id="tab_marginal"
+                        class="whitespace-nowrap shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium transition flex items-center gap-1.5 text-slate-400 hover:text-slate-200 hover:bg-slate-900 border border-transparent">
+                        <span class="w-2 h-2 rounded-full bg-amber-400"></span>
+                        <span>Marginal (50-74)</span>
+                        <span id="statMarginal" class="text-[11px] px-1.5 py-0.2 rounded-full bg-amber-500/15 text-amber-400 font-semibold">0</span>
+                    </button>
+                    <button onclick="setFilter('kill')" id="tab_kill"
+                        class="whitespace-nowrap shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium transition flex items-center gap-1.5 text-slate-400 hover:text-slate-200 hover:bg-slate-900 border border-transparent">
+                        <span class="w-2 h-2 rounded-full bg-rose-400"></span>
+                        <span>High Risk (&le;50)</span>
+                        <span id="statKill" class="text-[11px] px-1.5 py-0.2 rounded-full bg-rose-500/15 text-rose-400 font-semibold">0</span>
+                    </button>
                 </div>
 
-                <div class="relative shrink-0">
-                    <select id="sortBy" onchange="renderIdeas()"
-                        class="bg-slate-950 border border-slate-800 text-slate-300 text-xs rounded-xl pl-3 pr-8 py-1.5 focus:outline-none focus:border-blue-500 transition cursor-pointer appearance-none">
-                        <option value="score_desc">Score: High &rarr; Low</option>
-                        <option value="score_asc">Score: Low &rarr; High</option>
-                        <option value="progress_desc">Progress: Most Complete</option>
-                        <option value="date_desc">Newest First</option>
-                        <option value="date_asc">Oldest First</option>
-                        <option value="title_asc">Title: A &rarr; Z</option>
-                    </select>
-                    <svg class="w-3.5 h-3.5 text-slate-500 absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none"
-                        fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                <!-- Search & Sort Controls -->
+                <div class="flex items-center gap-2 flex-1 lg:max-w-md lg:justify-end">
+                    <div class="relative flex-1 min-w-[140px]">
+                        <svg class="w-3.5 h-3.5 text-slate-500 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                        </svg>
+                        <input type="text" id="searchInput" oninput="renderIdeas()" placeholder="Search title, problem, category..."
+                            class="w-full bg-slate-950 border border-slate-800 rounded-xl pl-8 pr-3 py-1.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 transition">
+                    </div>
+
+                    <div class="relative shrink-0">
+                        <select id="sortBy" onchange="renderIdeas()"
+                            class="bg-slate-950 border border-slate-800 text-slate-300 text-xs rounded-xl pl-3 pr-8 py-1.5 focus:outline-none focus:border-blue-500 transition cursor-pointer appearance-none">
+                            <option value="score_desc">Score: High &rarr; Low</option>
+                            <option value="score_asc">Score: Low &rarr; High</option>
+                            <option value="progress_desc">Progress: Most Complete</option>
+                            <option value="date_desc">Newest First</option>
+                            <option value="date_asc">Oldest First</option>
+                            <option value="title_asc">Title: A &rarr; Z</option>
+                        </select>
+                        <svg class="w-3.5 h-3.5 text-slate-500 absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Main Ideas Grid -->
+        <main>
+            <div id="emptyState" class="hidden text-center py-16 bg-slate-900/40 rounded-2xl border border-slate-800/80">
+                <div class="w-14 h-14 rounded-2xl bg-blue-500/10 text-blue-400 flex items-center justify-center mx-auto mb-3 border border-blue-500/20">
+                    <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
                     </svg>
                 </div>
+                <p class="text-slate-200 font-semibold mb-1" id="emptyStateTitle">No matching concepts found</p>
+                <p class="text-xs text-slate-400 mb-4 max-w-sm mx-auto" id="emptyStateSubtitle">Start by evaluating a new idea using the guided 4-step wizard.</p>
+                <button onclick="openWizard()"
+                    class="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-500 text-white text-xs px-4 py-2.5 rounded-xl transition font-medium shadow-md shadow-blue-600/20">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                    </svg>
+                    Evaluate New Concept
+                </button>
             </div>
-        </div>
-    </section>
 
-    <!-- Main Ideas Grid -->
-    <main>
-        <div id="emptyState" class="hidden text-center py-16 bg-slate-900/40 rounded-2xl border border-slate-800/80">
-            <div
-                class="w-14 h-14 rounded-2xl bg-blue-500/10 text-blue-400 flex items-center justify-center mx-auto mb-3 border border-blue-500/20">
-                <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z">
-                    </path>
-                </svg>
-            </div>
-            <p class="text-slate-200 font-semibold mb-1" id="emptyStateTitle">No matching concepts found</p>
-            <p class="text-xs text-slate-400 mb-4 max-w-sm mx-auto" id="emptyStateSubtitle">Start by evaluating a new
-                idea using the guided 4-step wizard.</p>
-            <button onclick="openWizard()"
-                class="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-500 text-white text-xs px-4 py-2.5 rounded-xl transition font-medium shadow-md shadow-blue-600/20">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
-                </svg>
-                Evaluate New Concept
-            </button>
-        </div>
-
-        <div id="ideasGrid" class="grid grid-cols-1 md:grid-cols-2 gap-5"></div>
-    </main>
+            <div id="ideasGrid" class="grid grid-cols-1 md:grid-cols-2 gap-5"></div>
+        </main>
     </div>
 
     <!-- Multi-Step Evaluation Wizard Modal -->
-    <div id="wizardModal"
-        class="fixed inset-0 bg-slate-950/80 backdrop-blur-md hidden z-50 overflow-y-auto px-4 py-6 flex items-center justify-center">
-        <div
-            class="max-w-4xl w-full bg-slate-900 border border-slate-800 rounded-2xl shadow-2xl overflow-hidden my-auto flex flex-col max-h-[94vh]">
-
+    <div id="wizardModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md hidden z-50 overflow-y-auto px-4 py-6 flex items-center justify-center">
+        <div class="max-w-4xl w-full bg-slate-900 border border-slate-800 rounded-2xl shadow-2xl overflow-hidden my-auto flex flex-col max-h-[94vh]">
+            
             <!-- Modal Header with Progress Indicator -->
             <div class="px-6 py-4 border-b border-slate-800 bg-slate-900/95 shrink-0 flex flex-col gap-3">
                 <div class="flex justify-between items-center">
                     <div class="flex items-center gap-3">
-                        <span
-                            class="w-8 h-8 rounded-lg bg-blue-500/10 text-blue-400 border border-blue-500/20 flex items-center justify-center font-bold text-xs"
-                            id="wizardStepNumberBadge">1/4</span>
+                        <span class="w-8 h-8 rounded-lg bg-blue-500/10 text-blue-400 border border-blue-500/20 flex items-center justify-center font-bold text-xs" id="wizardStepNumberBadge">1/4</span>
                         <div>
-                            <h2 id="wizardModalTitle" class="text-base sm:text-lg font-bold text-white">Evaluate Idea
-                                Concept</h2>
-                            <p class="text-xs text-slate-400" id="wizardStepSubheading">Step 1: Core Concept & Value
-                                Proposition</p>
+                            <h2 id="wizardModalTitle" class="text-base sm:text-lg font-bold text-white">Evaluate Idea Concept</h2>
+                            <p class="text-xs text-slate-400" id="wizardStepSubheading">Step 1: Core Concept & Value Proposition</p>
                         </div>
                     </div>
                     <div class="flex items-center gap-3">
-                        <button type="button" onclick="saveCurrentDraftFromWizard()"
-                            class="text-xs text-slate-300 hover:text-white bg-slate-800 hover:bg-slate-700 px-3 py-1.5 rounded-lg border border-slate-700 transition flex items-center gap-1.5">
-                            <svg class="w-3.5 h-3.5 text-blue-400" fill="none" stroke="currentColor"
-                                viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4">
-                                </path>
+                        <button type="button" onclick="saveCurrentDraftFromWizard()" class="text-xs text-slate-300 hover:text-white bg-slate-800 hover:bg-slate-700 px-3 py-1.5 rounded-lg border border-slate-700 transition flex items-center gap-1.5">
+                            <svg class="w-3.5 h-3.5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"></path>
                             </svg>
                             Save Draft
                         </button>
-                        <button onclick="closeWizard()"
-                            class="text-slate-400 hover:text-white text-2xl leading-none p-1 transition">&times;</button>
+                        <button onclick="closeWizard()" class="text-slate-400 hover:text-white text-2xl leading-none p-1 transition">&times;</button>
                     </div>
                 </div>
 
                 <!-- Wizard Progress Bar & Step Navigation Tabs -->
                 <div>
                     <div class="w-full bg-slate-950 h-1.5 rounded-full overflow-hidden mb-2">
-                        <div id="wizardProgressBar"
-                            class="bg-gradient-to-r from-blue-500 to-indigo-500 h-full w-1/4 transition-all duration-300">
-                        </div>
+                        <div id="wizardProgressBar" class="bg-gradient-to-r from-blue-500 to-indigo-500 h-full w-1/4 transition-all duration-300"></div>
                     </div>
                     <div class="grid grid-cols-4 gap-1 text-[11px] font-medium text-center">
-                        <button type="button" onclick="goToStep(1)" id="stepTab1"
-                            class="py-1 rounded-md text-blue-400 bg-blue-500/10 font-semibold truncate px-1">1. Thesis &
-                            ICP</button>
-                        <button type="button" onclick="goToStep(2)" id="stepTab2"
-                            class="py-1 rounded-md text-slate-400 hover:text-slate-200 truncate px-1">2. Market &
-                            Demand</button>
-                        <button type="button" onclick="goToStep(3)" id="stepTab3"
-                            class="py-1 rounded-md text-slate-400 hover:text-slate-200 truncate px-1">3. Feasibility &
-                            Cost</button>
-                        <button type="button" onclick="goToStep(4)" id="stepTab4"
-                            class="py-1 rounded-md text-slate-400 hover:text-slate-200 truncate px-1">4. Moat & Next
-                            Steps</button>
+                        <button type="button" onclick="goToStep(1)" id="stepTab1" class="py-1 rounded-md text-blue-400 bg-blue-500/10 font-semibold truncate px-1">1. Thesis & ICP</button>
+                        <button type="button" onclick="goToStep(2)" id="stepTab2" class="py-1 rounded-md text-slate-400 hover:text-slate-200 truncate px-1">2. Market & Demand</button>
+                        <button type="button" onclick="goToStep(3)" id="stepTab3" class="py-1 rounded-md text-slate-400 hover:text-slate-200 truncate px-1">3. Feasibility & Cost</button>
+                        <button type="button" onclick="goToStep(4)" id="stepTab4" class="py-1 rounded-md text-slate-400 hover:text-slate-200 truncate px-1">4. Moat & Next Steps</button>
                     </div>
                 </div>
             </div>
@@ -439,15 +379,11 @@
                 <!-- ================= STEP 1: Thesis & ICP ================= -->
                 <div id="stepContainer1" class="space-y-4">
                     <div class="bg-blue-500/5 border border-blue-500/20 rounded-xl p-3.5 flex items-start gap-3">
-                        <svg class="w-5 h-5 text-blue-400 shrink-0 mt-0.5" fill="none" stroke="currentColor"
-                            viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        <svg class="w-5 h-5 text-blue-400 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                         </svg>
                         <div class="text-xs text-slate-300 leading-relaxed">
-                            <strong class="text-blue-300 font-semibold">Step 1 Guide:</strong> Clearly define the
-                            foundational problem, target customer profile, and business model. You can always save as a
-                            draft and refine your research later.
+                            <strong class="text-blue-300 font-semibold">Step 1 Guide:</strong> Clearly define the foundational problem, target customer profile, and business model. You can always save as a draft and refine your research later.
                         </div>
                     </div>
 
@@ -520,16 +456,11 @@
                 <!-- ================= STEP 2: Market & Demand Potential ================= -->
                 <div id="stepContainer2" class="space-y-4 hidden">
                     <div class="bg-slate-950/80 border border-slate-800 rounded-xl p-3.5 flex items-start gap-3">
-                        <svg class="w-5 h-5 text-indigo-400 shrink-0 mt-0.5" fill="none" stroke="currentColor"
-                            viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z">
-                            </path>
+                        <svg class="w-5 h-5 text-indigo-400 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
                         </svg>
                         <div class="text-xs text-slate-300 leading-relaxed">
-                            <strong class="text-indigo-300 font-semibold">Pillars 1 to 4:</strong> Gauge true commercial
-                            appetite. Move the sliders from 0 (Worst) to 10 (Best) and record your research notes and
-                            competitor findings.
+                            <strong class="text-indigo-300 font-semibold">Pillars 1 to 4:</strong> Gauge true commercial appetite. Move the sliders from 0 (Worst) to 10 (Best) and record your research notes and competitor findings.
                         </div>
                     </div>
 
@@ -539,16 +470,11 @@
                 <!-- ================= STEP 3: Feasibility & Unit Economics ================= -->
                 <div id="stepContainer3" class="space-y-4 hidden">
                     <div class="bg-slate-950/80 border border-slate-800 rounded-xl p-3.5 flex items-start gap-3">
-                        <svg class="w-5 h-5 text-emerald-400 shrink-0 mt-0.5" fill="none" stroke="currentColor"
-                            viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z">
-                            </path>
+                        <svg class="w-5 h-5 text-emerald-400 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                         </svg>
                         <div class="text-xs text-slate-300 leading-relaxed">
-                            <strong class="text-emerald-300 font-semibold">Pillars 5 to 8:</strong> Evaluate customer
-                            acquisition cost, delivery margins, and execution speed. A high score means low friction and
-                            high margins!
+                            <strong class="text-emerald-300 font-semibold">Pillars 5 to 8:</strong> Evaluate customer acquisition cost, delivery margins, and execution speed. A high score means low friction and high margins!
                         </div>
                     </div>
 
@@ -558,23 +484,18 @@
                 <!-- ================= STEP 4: Moat, Viability & Next Steps ================= -->
                 <div id="stepContainer4" class="space-y-4 hidden">
                     <div class="bg-slate-950/80 border border-slate-800 rounded-xl p-3.5 flex items-start gap-3">
-                        <svg class="w-5 h-5 text-purple-400 shrink-0 mt-0.5" fill="none" stroke="currentColor"
-                            viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z">
-                            </path>
+                        <svg class="w-5 h-5 text-purple-400 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
                         </svg>
                         <div class="text-xs text-slate-300 leading-relaxed">
-                            <strong class="text-purple-300 font-semibold">Pillars 9 to 10 & Validation Plan:</strong>
-                            Assess defensibility and define the #1 risky assumption to test before building.
+                            <strong class="text-purple-300 font-semibold">Pillars 9 to 10 & Validation Plan:</strong> Assess defensibility and define the #1 risky assumption to test before building.
                         </div>
                     </div>
 
                     <div id="factorsStep4" class="space-y-4"></div>
 
                     <div class="border-t border-slate-800/80 pt-4 space-y-4">
-                        <h3 class="text-xs font-semibold uppercase tracking-wider text-slate-300">Pre-Launch Validation
-                            Blueprint</h3>
+                        <h3 class="text-xs font-semibold uppercase tracking-wider text-slate-300">Pre-Launch Validation Blueprint</h3>
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             <div>
                                 <label class="block text-xs font-medium text-slate-300 mb-1">
@@ -600,8 +521,7 @@
                 <div class="flex justify-between items-center pt-5 border-t border-slate-800 shrink-0">
                     <div class="flex items-center gap-3">
                         <span class="text-xs text-slate-400">Total Viability:</span>
-                        <span id="wizardTotalScoreBadge"
-                            class="text-sm font-bold text-white bg-slate-800 px-3 py-1 rounded-lg">50 / 100</span>
+                        <span id="wizardTotalScoreBadge" class="text-sm font-bold text-white bg-slate-800 px-3 py-1 rounded-lg">50 / 100</span>
                     </div>
 
                     <div class="flex items-center gap-2.5">
@@ -616,8 +536,7 @@
                         <button type="submit" id="wizardFinishBtn"
                             class="hidden bg-emerald-600 hover:bg-emerald-500 text-white px-5 py-2 rounded-xl text-xs sm:text-sm font-semibold transition shadow-lg shadow-emerald-600/25 flex items-center gap-1.5">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M5 13l4 4L19 7"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                             </svg>
                             Save & Finish Evaluation
                         </button>
@@ -628,22 +547,14 @@
     </div>
 
     <!-- Executive Report & Overview Modal (Multi-Page Print-to-PDF ready) -->
-    <div id="reportModal"
-        class="fixed inset-0 bg-slate-950/85 backdrop-blur-md hidden z-50 overflow-y-auto px-3 sm:px-4 py-6 flex items-center justify-center">
-        <div
-            class="max-w-4xl w-full bg-slate-900 border border-slate-800 rounded-2xl shadow-2xl overflow-hidden my-auto flex flex-col max-h-[95vh]">
-
+    <div id="reportModal" class="fixed inset-0 bg-slate-950/85 backdrop-blur-md hidden z-50 overflow-y-auto px-3 sm:px-4 py-6 flex items-center justify-center">
+        <div class="max-w-4xl w-full bg-slate-900 border border-slate-800 rounded-2xl shadow-2xl overflow-hidden my-auto flex flex-col max-h-[95vh]">
+            
             <!-- Report Header -->
-            <div
-                class="no-print px-6 py-4 border-b border-slate-800 bg-slate-900/95 flex justify-between items-center shrink-0">
+            <div class="no-print px-6 py-4 border-b border-slate-800 bg-slate-900/95 flex justify-between items-center shrink-0">
                 <div class="flex items-center gap-2.5">
-                    <span
-                        class="w-8 h-8 rounded-lg bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 flex items-center justify-center font-bold text-xs">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
-                            </path>
-                        </svg>
+                    <span class="w-8 h-8 rounded-lg bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 flex items-center justify-center font-bold text-xs">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
                     </span>
                     <div>
                         <h2 class="text-base font-bold text-white">Executive Evaluation Brief</h2>
@@ -651,17 +562,13 @@
                     </div>
                 </div>
                 <div class="flex items-center gap-2">
-                    <button onclick="window.print()"
-                        class="bg-blue-600 hover:bg-blue-500 text-white px-3.5 py-1.5 rounded-xl text-xs font-semibold transition shadow-md shadow-blue-600/20 flex items-center gap-1.5">
+                    <button onclick="window.print()" class="bg-blue-600 hover:bg-blue-500 text-white px-3.5 py-1.5 rounded-xl text-xs font-semibold transition shadow-md shadow-blue-600/20 flex items-center gap-1.5">
                         <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z">
-                            </path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path>
                         </svg>
                         Print / Save PDF
                     </button>
-                    <button onclick="closeReportModal()"
-                        class="text-slate-400 hover:text-white text-2xl leading-none p-1 transition">&times;</button>
+                    <button onclick="closeReportModal()" class="text-slate-400 hover:text-white text-2xl leading-none p-1 transition">&times;</button>
                 </div>
             </div>
 
@@ -673,17 +580,12 @@
     </div>
 
     <!-- Custom Delete Confirmation Modal -->
-    <div id="deleteModal"
-        class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm hidden z-50 overflow-y-auto px-4 py-6 flex items-center justify-center">
-        <div
-            class="max-w-md w-full bg-slate-900 border border-slate-800 rounded-2xl shadow-2xl overflow-hidden p-6 space-y-4 my-auto">
+    <div id="deleteModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm hidden z-50 overflow-y-auto px-4 py-6 flex items-center justify-center">
+        <div class="max-w-md w-full bg-slate-900 border border-slate-800 rounded-2xl shadow-2xl overflow-hidden p-6 space-y-4 my-auto">
             <div class="flex items-center gap-3.5">
-                <div
-                    class="w-10 h-10 rounded-xl bg-rose-500/10 text-rose-400 flex items-center justify-center shrink-0 border border-rose-500/20">
+                <div class="w-10 h-10 rounded-xl bg-rose-500/10 text-rose-400 flex items-center justify-center shrink-0 border border-rose-500/20">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
-                        </path>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
                     </svg>
                 </div>
                 <div>
@@ -693,8 +595,7 @@
             </div>
 
             <p class="text-xs text-slate-300 bg-slate-950/80 border border-slate-800/80 rounded-xl p-3 leading-relaxed">
-                Are you sure you want to delete <strong id="deleteIdeaTitle" class="text-white">this idea</strong>? This
-                action cannot be undone.
+                Are you sure you want to delete <strong id="deleteIdeaTitle" class="text-white">this idea</strong>? This action cannot be undone.
             </p>
 
             <div class="flex items-center justify-end gap-2.5 pt-2">
@@ -703,9 +604,7 @@
                 <button type="button" onclick="confirmDeleteIdea()"
                     class="bg-rose-600 hover:bg-rose-500 text-white px-4 py-2 rounded-xl text-xs sm:text-sm font-medium transition shadow-lg shadow-rose-600/20 flex items-center gap-1.5">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
-                        </path>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
                     </svg>
                     Delete Idea
                 </button>
@@ -714,11 +613,8 @@
     </div>
 
     <!-- Notification Toast -->
-    <div id="toast"
-        class="fixed bottom-5 right-5 bg-slate-900 border border-slate-700 text-white text-xs px-4 py-3 rounded-xl shadow-2xl transition-opacity duration-300 opacity-0 pointer-events-none z-50 flex items-center gap-2">
-        <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-        </svg>
+    <div id="toast" class="fixed bottom-5 right-5 bg-slate-900 border border-slate-700 text-white text-xs px-4 py-3 rounded-xl shadow-2xl transition-opacity duration-300 opacity-0 pointer-events-none z-50 flex items-center gap-2">
+        <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
         <span id="toastMsg">Notification</span>
     </div>
 
@@ -1240,7 +1136,7 @@
 
             let highStrengths = [];
             let warnings = [];
-
+            
             factorDefinitions.forEach(f => {
                 const score = (idea.scores && idea.scores[f.id] !== undefined) ? idea.scores[f.id] : 5;
                 if (score >= 8) highStrengths.push({ ...f, score });
@@ -1336,10 +1232,11 @@
                         <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400">Automated Heuristic Diagnostics</h3>
                         
                         ${heuristicAlerts.length > 0 ? heuristicAlerts.map(h => `
-                            <div class="p-3.5 rounded-xl border text-xs leading-relaxed ${h.type === 'danger' ? 'bg-rose-500/10 border-rose-500/30 text-rose-300' :
-                    h.type === 'warning' ? 'bg-amber-500/10 border-amber-500/30 text-amber-300' :
-                        'bg-emerald-500/10 border-emerald-500/30 text-emerald-300'
-                }">
+                            <div class="p-3.5 rounded-xl border text-xs leading-relaxed ${
+                                h.type === 'danger' ? 'bg-rose-500/10 border-rose-500/30 text-rose-300' :
+                                h.type === 'warning' ? 'bg-amber-500/10 border-amber-500/30 text-amber-300' :
+                                'bg-emerald-500/10 border-emerald-500/30 text-emerald-300'
+                            }">
                                 <strong class="font-bold block mb-0.5">${h.type === 'danger' ? '🚨' : h.type === 'warning' ? '⚠️' : '🚀'} ${h.title}</strong>
                                 <span>${h.desc}</span>
                             </div>
@@ -1392,10 +1289,10 @@
                     <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-3">Factor-by-Factor Evidence & Research Logs</h3>
                     <div class="space-y-3">
                         ${factorDefinitions.map(f => {
-                    const score = (idea.scores && idea.scores[f.id] !== undefined) ? idea.scores[f.id] : 5;
-                    const note = (idea.notes && idea.notes[f.id]) ? idea.notes[f.id] : '';
-                    const scoreColor = score >= 8 ? 'text-emerald-400 bg-emerald-500/10 border-emerald-500/20' : score >= 5 ? 'text-blue-400 bg-blue-500/10 border-blue-500/20' : 'text-rose-400 bg-rose-500/10 border-rose-500/20';
-                    return `
+                            const score = (idea.scores && idea.scores[f.id] !== undefined) ? idea.scores[f.id] : 5;
+                            const note = (idea.notes && idea.notes[f.id]) ? idea.notes[f.id] : '';
+                            const scoreColor = score >= 8 ? 'text-emerald-400 bg-emerald-500/10 border-emerald-500/20' : score >= 5 ? 'text-blue-400 bg-blue-500/10 border-blue-500/20' : 'text-rose-400 bg-rose-500/10 border-rose-500/20';
+                            return `
                                 <div class="bg-slate-900/60 border border-slate-800/80 rounded-xl p-3 flex flex-col sm:flex-row justify-between gap-2.5 print-card text-xs">
                                     <div class="space-y-0.5 flex-1">
                                         <div class="flex items-center gap-2">
@@ -1407,7 +1304,7 @@
                                     </div>
                                 </div>
                             `;
-                }).join('')}
+                        }).join('')}
                     </div>
                 </div>
 
@@ -1421,7 +1318,7 @@
             setTimeout(() => {
                 const canvas = document.getElementById('reportRadarCanvas');
                 if (!canvas) return;
-
+                
                 if (radarChartInstance) {
                     radarChartInstance.destroy();
                 }
