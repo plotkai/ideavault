@@ -299,27 +299,32 @@
     </div>
 
     <!-- Multi-Step Evaluation Wizard Modal -->
-    <div id="wizardModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md hidden z-50 overflow-y-auto px-4 py-6 flex items-center justify-center">
-        <div class="max-w-4xl w-full bg-slate-900 border border-slate-800 rounded-2xl shadow-2xl overflow-hidden my-auto flex flex-col max-h-[94vh]">
+    <div id="wizardModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md hidden z-50 overflow-y-auto px-2 sm:px-4 py-3 sm:py-6 flex items-center justify-center">
+        <div class="max-w-4xl w-full bg-slate-900 border border-slate-800 rounded-2xl shadow-2xl overflow-hidden my-auto flex flex-col max-h-[95vh]">
             
             <!-- Modal Header with Progress Indicator -->
-            <div class="px-6 py-4 border-b border-slate-800 bg-slate-900/95 shrink-0 flex flex-col gap-3">
-                <div class="flex justify-between items-center">
-                    <div class="flex items-center gap-3">
-                        <span class="w-8 h-8 rounded-lg bg-blue-500/10 text-blue-400 border border-blue-500/20 flex items-center justify-center font-bold text-xs" id="wizardStepNumberBadge">1/4</span>
-                        <div>
-                            <h2 id="wizardModalTitle" class="text-base sm:text-lg font-bold text-white">Evaluate Idea Concept</h2>
-                            <p class="text-xs text-slate-400" id="wizardStepSubheading">Step 1: Core Concept & Value Proposition</p>
+            <div class="px-4 sm:px-6 py-3.5 sm:py-4 border-b border-slate-800 bg-slate-900/95 shrink-0 flex flex-col gap-3">
+                <div class="flex justify-between items-center gap-2">
+                    <div class="flex items-center gap-2.5 min-w-0">
+                        <span class="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-blue-500/10 text-blue-400 border border-blue-500/20 flex items-center justify-center font-bold text-xs shrink-0" id="wizardStepNumberBadge">1/4</span>
+                        <div class="min-w-0">
+                            <h2 id="wizardModalTitle" class="text-sm sm:text-lg font-bold text-white truncate">Evaluate Concept</h2>
+                            <p class="text-[10px] sm:text-xs text-slate-400 truncate" id="wizardStepSubheading">Step 1: Core Concept & Value Proposition</p>
                         </div>
                     </div>
-                    <div class="flex items-center gap-3">
-                        <button type="button" onclick="saveCurrentDraftFromWizard()" class="text-xs text-slate-300 hover:text-white bg-slate-800 hover:bg-slate-700 px-3 py-1.5 rounded-lg border border-slate-700 transition flex items-center gap-1.5">
+                    <div class="flex items-center gap-1.5 sm:gap-3 shrink-0">
+                        <button type="button" onclick="saveCurrentDraftFromWizard()" class="text-xs text-slate-300 hover:text-white bg-slate-800 hover:bg-slate-700 px-2.5 sm:px-3 py-1.5 rounded-lg border border-slate-700 transition flex items-center gap-1">
                             <svg class="w-3.5 h-3.5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"></path>
                             </svg>
-                            Save Draft
+                            <span class="hidden sm:inline">Save Draft</span>
+                            <span class="inline sm:hidden">Save</span>
                         </button>
-                        <button onclick="closeWizard()" class="text-slate-400 hover:text-white text-2xl leading-none p-1 transition">&times;</button>
+                        <button onclick="closeWizard()" aria-label="Close" class="text-slate-400 hover:text-white text-xl sm:text-2xl leading-none p-1 sm:p-1.5 rounded-lg hover:bg-slate-800 transition shrink-0">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                            </svg>
+                        </button>
                     </div>
                 </div>
 
@@ -328,17 +333,17 @@
                     <div class="w-full bg-slate-950 h-1.5 rounded-full overflow-hidden mb-2">
                         <div id="wizardProgressBar" class="bg-gradient-to-r from-blue-500 to-indigo-500 h-full w-1/4 transition-all duration-300"></div>
                     </div>
-                    <div class="grid grid-cols-4 gap-1 text-[11px] font-medium text-center">
-                        <button type="button" onclick="goToStep(1)" id="stepTab1" class="py-1 rounded-md text-blue-400 bg-blue-500/10 font-semibold truncate px-1">1. Thesis & ICP</button>
-                        <button type="button" onclick="goToStep(2)" id="stepTab2" class="py-1 rounded-md text-slate-400 hover:text-slate-200 truncate px-1">2. Market & Demand</button>
-                        <button type="button" onclick="goToStep(3)" id="stepTab3" class="py-1 rounded-md text-slate-400 hover:text-slate-200 truncate px-1">3. Feasibility & Cost</button>
-                        <button type="button" onclick="goToStep(4)" id="stepTab4" class="py-1 rounded-md text-slate-400 hover:text-slate-200 truncate px-1">4. Moat & Next Steps</button>
+                    <div class="grid grid-cols-4 gap-1 text-[10px] sm:text-[11px] font-medium text-center">
+                        <button type="button" onclick="goToStep(1)" id="stepTab1" class="py-1 rounded-md text-blue-400 bg-blue-500/10 font-semibold truncate px-0.5 sm:px-1">1. Thesis</button>
+                        <button type="button" onclick="goToStep(2)" id="stepTab2" class="py-1 rounded-md text-slate-400 hover:text-slate-200 truncate px-0.5 sm:px-1">2. Market</button>
+                        <button type="button" onclick="goToStep(3)" id="stepTab3" class="py-1 rounded-md text-slate-400 hover:text-slate-200 truncate px-0.5 sm:px-1">3. Cost</button>
+                        <button type="button" onclick="goToStep(4)" id="stepTab4" class="py-1 rounded-md text-slate-400 hover:text-slate-200 truncate px-0.5 sm:px-1">4. Moat</button>
                     </div>
                 </div>
             </div>
 
             <!-- Form Body with Multi-Step Containers -->
-            <form id="wizardForm" onsubmit="finalizeIdea(event)" class="p-6 overflow-y-auto flex-1 space-y-6">
+            <form id="wizardForm" onsubmit="finalizeIdea(event)" class="p-4 sm:p-6 overflow-y-auto flex-1 space-y-5 sm:space-y-6">
                 <input type="hidden" id="wizardIdeaId">
 
                 <!-- ================= STEP 1: Thesis & ICP ================= -->
@@ -483,27 +488,27 @@
                 </div>
 
                 <!-- Footer Navigation Controls -->
-                <div class="flex justify-between items-center pt-5 border-t border-slate-800 shrink-0">
-                    <div class="flex items-center gap-3">
-                        <span class="text-xs text-slate-400">Total Viability:</span>
-                        <span id="wizardTotalScoreBadge" class="text-sm font-bold text-white bg-slate-800 px-3 py-1 rounded-lg">50 / 100</span>
+                <div class="flex justify-between items-center pt-4 sm:pt-5 border-t border-slate-800 shrink-0 gap-2">
+                    <div class="flex items-center gap-1.5 sm:gap-3">
+                        <span class="text-[11px] sm:text-xs text-slate-400 hidden sm:inline">Viability:</span>
+                        <span id="wizardTotalScoreBadge" class="text-xs sm:text-sm font-bold text-white bg-slate-800 px-2.5 sm:px-3 py-1 rounded-lg">50 / 100</span>
                     </div>
 
-                    <div class="flex items-center gap-2.5">
+                    <div class="flex items-center gap-2">
                         <button type="button" id="wizardPrevBtn" onclick="prevStep()"
-                            class="px-4 py-2 rounded-xl text-xs sm:text-sm text-slate-400 hover:text-white bg-slate-950 hover:bg-slate-800 border border-slate-800 transition disabled:opacity-40 disabled:pointer-events-none">
+                            class="px-3 sm:px-4 py-2 rounded-xl text-xs sm:text-sm text-slate-400 hover:text-white bg-slate-950 hover:bg-slate-800 border border-slate-800 transition disabled:opacity-40 disabled:pointer-events-none">
                             &larr; Back
                         </button>
                         <button type="button" id="wizardNextBtn" onclick="nextStep()"
-                            class="bg-blue-600 hover:bg-blue-500 text-white px-5 py-2 rounded-xl text-xs sm:text-sm font-medium transition shadow-md shadow-blue-600/20 flex items-center gap-1.5">
-                            Next Step &rarr;
+                            class="bg-blue-600 hover:bg-blue-500 text-white px-3.5 sm:px-5 py-2 rounded-xl text-xs sm:text-sm font-medium transition shadow-md shadow-blue-600/20 flex items-center gap-1.5">
+                            Next &rarr;
                         </button>
                         <button type="submit" id="wizardFinishBtn"
-                            class="hidden bg-emerald-600 hover:bg-emerald-500 text-white px-5 py-2 rounded-xl text-xs sm:text-sm font-semibold transition shadow-lg shadow-emerald-600/25 flex items-center gap-1.5">
+                            class="hidden bg-emerald-600 hover:bg-emerald-500 text-white px-3.5 sm:px-5 py-2 rounded-xl text-xs sm:text-sm font-semibold transition shadow-lg shadow-emerald-600/25 flex items-center gap-1.5">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                             </svg>
-                            Save & Finish Evaluation
+                            Save & Finish
                         </button>
                     </div>
                 </div>
@@ -512,33 +517,38 @@
     </div>
 
     <!-- Executive Report & Overview Modal (Multi-Page Print-to-PDF ready) -->
-    <div id="reportModal" class="fixed inset-0 bg-slate-950/85 backdrop-blur-md hidden z-50 overflow-y-auto px-3 sm:px-4 py-6 flex items-center justify-center">
-        <div class="max-w-4xl w-full bg-slate-900 border border-slate-800 rounded-2xl shadow-2xl overflow-hidden my-auto flex flex-col max-h-[95vh]">
+    <div id="reportModal" class="fixed inset-0 bg-slate-950/85 backdrop-blur-md hidden z-50 overflow-y-auto px-2 sm:px-4 py-2 sm:py-6 flex items-center justify-center">
+        <div class="max-w-4xl w-full bg-slate-900 border border-slate-800 rounded-2xl shadow-2xl overflow-hidden my-auto flex flex-col max-h-[96vh] sm:max-h-[95vh]">
             
             <!-- Report Header -->
-            <div class="no-print px-6 py-4 border-b border-slate-800 bg-slate-900/95 flex justify-between items-center shrink-0">
-                <div class="flex items-center gap-2.5">
-                    <span class="w-8 h-8 rounded-lg bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 flex items-center justify-center font-bold text-xs">
+            <div class="no-print px-3.5 sm:px-6 py-3 sm:py-4 border-b border-slate-800 bg-slate-900/95 flex justify-between items-center gap-2 shrink-0">
+                <div class="flex items-center gap-2 sm:gap-2.5 min-w-0">
+                    <span class="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 flex items-center justify-center font-bold text-xs shrink-0">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
                     </span>
-                    <div>
-                        <h2 class="text-base font-bold text-white">Executive Evaluation Brief</h2>
-                        <p class="text-xs text-slate-400">Comprehensive diagnostic & risk footprint</p>
+                    <div class="min-w-0">
+                        <h2 class="text-xs sm:text-base font-bold text-white truncate">Executive Brief</h2>
+                        <p class="text-[10px] sm:text-xs text-slate-400 truncate">10-Pillar Diagnostic Report</p>
                     </div>
                 </div>
-                <div class="flex items-center gap-2">
-                    <button onclick="window.print()" class="bg-blue-600 hover:bg-blue-500 text-white px-3.5 py-1.5 rounded-xl text-xs font-semibold transition shadow-md shadow-blue-600/20 flex items-center gap-1.5">
+                <div class="flex items-center gap-1.5 sm:gap-2 shrink-0">
+                    <button onclick="window.print()" class="bg-blue-600 hover:bg-blue-500 text-white px-2.5 sm:px-3.5 py-1.5 rounded-xl text-xs font-semibold transition shadow-md shadow-blue-600/20 flex items-center gap-1.5 shrink-0 active:scale-95">
                         <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path>
                         </svg>
-                        Print / Save PDF
+                        <span class="hidden xs:inline sm:inline">Print / Save PDF</span>
+                        <span class="inline xs:hidden sm:hidden">PDF</span>
                     </button>
-                    <button onclick="closeReportModal()" class="text-slate-400 hover:text-white text-2xl leading-none p-1 transition">&times;</button>
+                    <button onclick="closeReportModal()" aria-label="Close Report" class="text-slate-400 hover:text-white text-xl sm:text-2xl leading-none p-1 sm:p-1.5 rounded-lg hover:bg-slate-800 transition shrink-0">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </button>
                 </div>
             </div>
 
             <!-- Report Content Body -->
-            <div id="reportContent" class="p-6 sm:p-8 overflow-y-auto space-y-6 flex-1 text-slate-200">
+            <div id="reportContent" class="p-3.5 sm:p-8 overflow-y-auto space-y-4 sm:space-y-6 flex-1 text-slate-200">
                 <!-- Dynamically populated report content -->
             </div>
         </div>
@@ -1151,42 +1161,42 @@
 
             container.innerHTML = `
                 <!-- Executive Header Card -->
-                <div class="bg-slate-950 border border-slate-800 rounded-2xl p-6 print-card">
-                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-4 pb-4 border-b border-slate-800">
-                        <div>
-                            <span class="text-xs font-bold text-blue-400 uppercase tracking-wider bg-blue-500/10 px-2.5 py-1 rounded-md border border-blue-500/20">${escapeHtml(idea.category || 'Venture Concept')}</span>
-                            <h1 class="text-2xl font-bold text-white mt-2 print-text-dark">${escapeHtml(idea.title)}</h1>
-                            ${idea.tagline ? `<p class="text-xs text-slate-300 mt-1 print-text-muted italic">${escapeHtml(idea.tagline)}</p>` : ''}
+                <div class="bg-slate-950 border border-slate-800 rounded-2xl p-4 sm:p-6 print-card">
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-4 mb-4 pb-4 border-b border-slate-800">
+                        <div class="min-w-0 flex-1">
+                            <span class="text-[10px] sm:text-xs font-bold text-blue-400 uppercase tracking-wider bg-blue-500/10 px-2.5 py-1 rounded-md border border-blue-500/20">${escapeHtml(idea.category || 'Venture Concept')}</span>
+                            <h1 class="text-xl sm:text-2xl font-bold text-white mt-2 print-text-dark break-words">${escapeHtml(idea.title)}</h1>
+                            ${idea.tagline ? `<p class="text-xs sm:text-sm text-slate-300 mt-1 print-text-muted italic break-words">${escapeHtml(idea.tagline)}</p>` : ''}
                         </div>
-                        <div class="text-right shrink-0">
-                            <div class="text-3xl font-extrabold text-white print-text-dark">${idea.totalScore}<span class="text-sm font-normal text-slate-400 print-text-muted">/100</span></div>
-                            <span class="inline-block mt-1 text-xs font-bold px-2.5 py-1 rounded-full border ${verdictClass}">${verdict}</span>
+                        <div class="flex sm:flex-col items-center sm:items-end justify-between w-full sm:w-auto shrink-0 pt-2 sm:pt-0 border-t sm:border-t-0 border-slate-800/60">
+                            <div class="text-2xl sm:text-3xl font-extrabold text-white print-text-dark">${idea.totalScore}<span class="text-xs sm:text-sm font-normal text-slate-400 print-text-muted">/100</span></div>
+                            <span class="inline-block sm:mt-1 text-[11px] sm:text-xs font-bold px-2.5 py-0.5 sm:py-1 rounded-full border ${verdictClass}">${verdict}</span>
                         </div>
                     </div>
 
                     <!-- Core Thesis Grid -->
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
-                        <div class="bg-slate-900/80 p-3.5 rounded-xl border border-slate-800/80 print-card">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-3 sm:gap-4 text-xs">
+                        <div class="bg-slate-900/80 p-3 sm:p-3.5 rounded-xl border border-slate-800/80 print-card">
                             <strong class="text-slate-400 block mb-1 uppercase font-semibold text-[10px] tracking-wider">Target Customer (ICP)</strong>
-                            <p class="text-slate-200 print-text-dark">${escapeHtml(idea.targetAudience || 'Not specified')}</p>
+                            <p class="text-slate-200 print-text-dark break-words leading-relaxed">${escapeHtml(idea.targetAudience || 'Not specified')}</p>
                         </div>
-                        <div class="bg-slate-900/80 p-3.5 rounded-xl border border-slate-800/80 print-card">
+                        <div class="bg-slate-900/80 p-3 sm:p-3.5 rounded-xl border border-slate-800/80 print-card">
                             <strong class="text-slate-400 block mb-1 uppercase font-semibold text-[10px] tracking-wider">Acute Pain / Problem</strong>
-                            <p class="text-slate-200 print-text-dark">${escapeHtml(idea.problem || 'Not specified')}</p>
+                            <p class="text-slate-200 print-text-dark break-words leading-relaxed">${escapeHtml(idea.problem || 'Not specified')}</p>
                         </div>
-                        <div class="bg-slate-900/80 p-3.5 rounded-xl border border-slate-800/80 print-card">
+                        <div class="bg-slate-900/80 p-3 sm:p-3.5 rounded-xl border border-slate-800/80 print-card">
                             <strong class="text-slate-400 block mb-1 uppercase font-semibold text-[10px] tracking-wider">Proposed Solution</strong>
-                            <p class="text-slate-200 print-text-dark">${escapeHtml(idea.solution || 'Not specified')}</p>
+                            <p class="text-slate-200 print-text-dark break-words leading-relaxed">${escapeHtml(idea.solution || 'Not specified')}</p>
                         </div>
                     </div>
                 </div>
 
                 <!-- Visual Radar Analytics & Heuristic Diagnostics -->
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 items-center">
                     <!-- Radar Footprint Chart -->
-                    <div class="bg-slate-950 border border-slate-800 rounded-2xl p-5 flex flex-col items-center justify-center print-card min-h-[340px]">
-                        <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-3 text-center">10-Pillar Viability Radar</h3>
-                        <div class="w-full max-w-[320px] aspect-square">
+                    <div class="bg-slate-950 border border-slate-800 rounded-2xl p-4 sm:p-5 flex flex-col items-center justify-center print-card min-h-[300px] sm:min-h-[340px]">
+                        <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2 sm:mb-3 text-center">10-Pillar Viability Radar</h3>
+                        <div class="w-full max-w-[280px] sm:max-w-[320px] aspect-square">
                             <canvas id="reportRadarCanvas"></canvas>
                         </div>
                     </div>
@@ -1635,15 +1645,25 @@
                     <!-- Card Actions -->
                     <div class="flex flex-wrap justify-between items-center pt-3 border-t border-slate-800/80 text-xs text-slate-400 gap-2">
                         <span class="text-[11px] text-slate-500">${idea.date || 'Recent'}</span>
-                        <div class="flex items-center gap-2">
+                        <div class="flex items-center gap-1.5">
                             <button onclick="openReportModal('${escapeHtml(String(idea.id))}')" 
-                                class="bg-blue-600/15 hover:bg-blue-600 text-blue-400 hover:text-white border border-blue-500/30 px-2.5 py-1 rounded-lg text-xs font-semibold transition flex items-center gap-1">
+                                class="bg-blue-600/15 hover:bg-blue-600 text-blue-400 hover:text-white border border-blue-500/30 px-2.5 py-1.5 rounded-lg text-xs font-semibold transition flex items-center gap-1.5 active:scale-95 shadow-sm">
                                 <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
-                                View Report
+                                <span>Report</span>
                             </button>
-                            <button onclick="openWizard('${escapeHtml(String(idea.id))}')" title="Edit Concept" class="hover:text-white bg-slate-800 hover:bg-slate-700 px-2.5 py-1 rounded-lg border border-slate-700 transition font-medium">Edit</button>
-                            <button onclick="duplicateIdea('${escapeHtml(String(idea.id))}')" title="Duplicate Concept" class="hover:text-slate-300 p-1 transition">&squf;&squf;</button>
-                            <button onclick="promptDeleteIdea('${escapeHtml(String(idea.id))}')" title="Delete Concept" class="hover:text-rose-400 p-1 transition">&times;</button>
+                            <button onclick="openWizard('${escapeHtml(String(idea.id))}')" title="Edit Concept" 
+                                class="bg-slate-800/80 hover:bg-slate-700 text-slate-300 hover:text-white border border-slate-700/80 px-2.5 py-1.5 rounded-lg text-xs font-medium transition flex items-center gap-1.5 active:scale-95">
+                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+                                <span>Edit</span>
+                            </button>
+                            <button onclick="duplicateIdea('${escapeHtml(String(idea.id))}')" title="Duplicate Concept" 
+                                class="bg-slate-800/80 hover:bg-slate-700 text-slate-400 hover:text-slate-200 border border-slate-700/80 p-1.5 rounded-lg transition active:scale-95 flex items-center justify-center">
+                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+                            </button>
+                            <button onclick="promptDeleteIdea('${escapeHtml(String(idea.id))}')" title="Delete Concept" 
+                                class="bg-slate-800/80 hover:bg-rose-500/20 text-slate-400 hover:text-rose-400 border border-slate-700/80 hover:border-rose-500/30 p-1.5 rounded-lg transition active:scale-95 flex items-center justify-center">
+                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                            </button>
                         </div>
                     </div>
                 `;
