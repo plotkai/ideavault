@@ -4,10 +4,48 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Idea Graveyard & Evaluator</title>
+    <title>IdeaVault Pro — Professional Venture & Idea Evaluation Platform</title>
+    <meta name="description" content="Evaluate, stress-test, and prioritize startup concepts and business ideas with a comprehensive 10-pillar viability framework, research logs, and executive reports.">
     <link rel="manifest"
-        href="data:application/manifest+json;charset=utf-8,%7B%22name%22%3A%22Idea%20Evaluator%22%2C%22short_name%22%3A%22Ideas%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%230f172a%22%2C%22theme_color%22%3A%22%233b82f6%22%7D">
+        href="data:application/manifest+json;charset=utf-8,%7B%22name%22%3A%22IdeaVault%20Pro%22%2C%22short_name%22%3A%22IdeaVault%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%23090d16%22%2C%22theme_color%22%3A%22%232563eb%22%7D">
+    
+    <!-- Google Fonts: Plus Jakarta Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'system-ui', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#eff6ff',
+                            100: '#dbeafe',
+                            200: '#bfdbfe',
+                            300: '#93c5fd',
+                            400: '#60a5fa',
+                            500: '#3b82f6',
+                            600: '#2563eb',
+                            700: '#1d4ed8',
+                            800: '#1e40af',
+                            900: '#1e3a8a',
+                            950: '#0f172a',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- Chart.js for Radar Footprint & Visual Analytics -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
     <style>
         /* Custom range slider styling */
         input[type=range] {
@@ -46,226 +84,461 @@
             box-shadow: 0 0 10px rgba(59, 130, 246, 0.5);
         }
 
-        /* Hide scrollbars for clean horizontal tab scrolling if ever needed */
         .no-scrollbar::-webkit-scrollbar {
             display: none;
         }
-
         .no-scrollbar {
             -ms-overflow-style: none;
             scrollbar-width: none;
         }
+
+        /* Bulletproof Multi-Page Print Styles for Executive Report */
+        @media print {
+            @page {
+                margin: 12mm 15mm;
+                size: portrait;
+            }
+
+            /* Hide everything outside the active report modal */
+            body > *:not(#reportModal),
+            header,
+            #toolbar,
+            main,
+            #wizardModal,
+            #deleteModal,
+            #toast,
+            .no-print {
+                display: none !important;
+            }
+
+            html, body {
+                background: #ffffff !important;
+                color: #0f172a !important;
+                height: auto !important;
+                min-height: auto !important;
+                overflow: visible !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                font-size: 12px !important;
+            }
+
+            /* Unconstrain the modal and all its scroll wrappers */
+            #reportModal {
+                position: static !important;
+                display: block !important;
+                inset: auto !important;
+                width: 100% !important;
+                max-width: 100% !important;
+                height: auto !important;
+                min-height: auto !important;
+                max-height: none !important;
+                overflow: visible !important;
+                background: transparent !important;
+                padding: 0 !important;
+                margin: 0 !important;
+                box-shadow: none !important;
+                backdrop-filter: none !important;
+                z-index: auto !important;
+            }
+
+            #reportModal > div {
+                position: static !important;
+                display: block !important;
+                width: 100% !important;
+                max-width: 100% !important;
+                height: auto !important;
+                max-height: none !important;
+                overflow: visible !important;
+                background: #ffffff !important;
+                border: none !important;
+                border-radius: 0 !important;
+                box-shadow: none !important;
+                margin: 0 !important;
+                padding: 0 !important;
+            }
+
+            #reportContent {
+                overflow: visible !important;
+                height: auto !important;
+                max-height: none !important;
+                padding: 0 !important;
+                display: block !important;
+                color: #0f172a !important;
+            }
+
+            /* Prevent cards from breaking awkwardly across pages */
+            .print-card {
+                background: #ffffff !important;
+                border: 1px solid #cbd5e1 !important;
+                color: #0f172a !important;
+                break-inside: avoid !important;
+                page-break-inside: avoid !important;
+                box-shadow: none !important;
+                margin-bottom: 12px !important;
+            }
+
+            .print-text-dark {
+                color: #0f172a !important;
+            }
+
+            .print-text-muted {
+                color: #475569 !important;
+            }
+
+            canvas {
+                max-width: 260px !important;
+                max-height: 260px !important;
+                margin: 0 auto !important;
+            }
+        }
     </style>
 </head>
 
-<body class="bg-slate-950 text-slate-100 min-h-screen font-sans selection:bg-blue-500 selection:text-white">
-    <div class="max-w-5xl mx-auto px-4 py-8">
-        <!-- Header -->
-        <header
-            class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 pb-6 border-b border-slate-800 gap-4">
-            <div class="space-y-0.5">
-                <h1 class="text-2xl font-bold tracking-tight text-white flex items-center gap-2">
-                    <svg class="w-7 h-7 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10">
-                        </path>
-                    </svg>
-                    Idea Graveyard & Vault
-                </h1>
-                <p class="text-xs sm:text-sm text-slate-400">10-Factor Market Evaluation Framework</p>
-            </div>
-            <!-- Action buttons: Export & Import on the left, New Idea on the right in mobile view -->
-            <div class="flex items-center justify-between sm:justify-end gap-2 w-full sm:w-auto sm:ml-auto">
-                <div class="flex items-center gap-2">
-                    <button onclick="exportJSON()" id="exportBtn" title="Export ideas as JSON file"
-                        class="bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-800 hover:border-slate-700 px-3 py-2 rounded-xl font-medium text-xs sm:text-sm transition flex items-center gap-1.5 shadow-sm">
-                        <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+<body class="bg-[#0b1120] text-slate-100 min-h-screen font-sans selection:bg-blue-500 selection:text-white antialiased">
+    <div class="max-w-6xl mx-auto px-4 py-6 sm:py-8">
+        
+        <!-- App Header -->
+        <header class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 pb-6 border-b border-slate-800/80 gap-4">
+            <div class="space-y-1">
+                <div class="flex items-center gap-2.5">
+                    <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-500 flex items-center justify-center shadow-lg shadow-blue-500/20">
+                        <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
                         </svg>
-                        Export JSON
-                    </button>
-                    <label
-                        class="bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-800 hover:border-slate-700 px-3 py-2 rounded-xl font-medium text-xs sm:text-sm transition flex items-center gap-1.5 cursor-pointer shadow-sm"
-                        title="Import ideas from JSON backup">
-                        <svg class="w-4 h-4 text-sky-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path>
-                        </svg>
-                        Import
-                        <input type="file" id="importInput" accept=".json" onchange="importJSON(event)" class="hidden">
-                    </label>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <h1 class="text-2xl font-bold tracking-tight text-white">IdeaVault <span class="text-blue-400 font-semibold text-sm bg-blue-500/10 px-2 py-0.5 rounded-md border border-blue-500/20">PRO</span></h1>
+                    </div>
                 </div>
-                <button onclick="openModal()"
-                    class="bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded-xl font-medium text-xs sm:text-sm transition shadow-lg shadow-blue-600/20 flex items-center gap-1.5 shrink-0">
+                <p class="text-xs sm:text-sm text-slate-400">10-Pillar Market Viability & Venture Evaluation Framework</p>
+            </div>
+
+            <!-- Action Toolbar: Import, Export, + New Idea -->
+            <div class="flex flex-wrap items-center gap-2.5 w-full md:w-auto justify-start md:justify-end">
+                <button onclick="exportJSON()" title="Export all ideas as a JSON backup"
+                    class="bg-slate-900/90 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-800 hover:border-slate-700 px-3.5 py-2 rounded-xl font-medium text-xs sm:text-sm transition flex items-center gap-2 shadow-sm">
+                    <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+                    </svg>
+                    Export JSON
+                </button>
+                <label class="bg-slate-900/90 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-800 hover:border-slate-700 px-3.5 py-2 rounded-xl font-medium text-xs sm:text-sm transition flex items-center gap-2 cursor-pointer shadow-sm"
+                    title="Import ideas from JSON backup">
+                    <svg class="w-4 h-4 text-sky-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path>
+                    </svg>
+                    Import
+                    <input type="file" id="importInput" accept=".json" onchange="importJSON(event)" class="hidden">
+                </label>
+                <button onclick="openWizard()"
+                    class="bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded-xl font-semibold text-xs sm:text-sm transition shadow-lg shadow-blue-600/25 flex items-center gap-2">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
                     </svg>
-                    New Idea
+                    Evaluate New Idea
                 </button>
             </div>
         </header>
 
-        <!-- Controls Toolbar: Interactive Filter Tabs, Search, & Sort (Sticky on scroll) -->
-        <section id="toolbar"
-            class="sticky top-3 z-30 mb-6 bg-slate-900/90 backdrop-blur-md border border-slate-800/90 p-3 sm:p-3.5 rounded-2xl shadow-xl shadow-slate-950/50 transition-all">
+        <!-- Sticky Filter & Search Toolbar -->
+        <section id="toolbar" class="sticky top-3 z-30 mb-6 bg-slate-900/90 backdrop-blur-md border border-slate-800/90 p-3 sm:p-3.5 rounded-2xl shadow-xl shadow-slate-950/60 transition-all">
             <div class="flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-3">
-                <!-- Filter Pills with Simple Counts & Color Dots (Never wrap awkwardly) -->
-                <div class="flex items-center gap-1 sm:gap-1.5 p-1 bg-slate-950/80 border border-slate-800/80 rounded-xl overflow-x-auto no-scrollbar shrink-0"
-                    id="filterTabs">
+                <!-- Filter Pills -->
+                <div class="flex items-center gap-1.5 p-1 bg-slate-950/90 border border-slate-800/80 rounded-xl overflow-x-auto no-scrollbar shrink-0" id="filterTabs">
                     <button onclick="setFilter('all')" id="tab_all"
-                        class="whitespace-nowrap shrink-0 px-2.5 sm:px-3 py-1 rounded-lg text-xs font-medium transition flex items-center gap-1.5 bg-slate-800 text-white shadow-sm border border-slate-700/60">
-                        <span>All</span>
-                        <span id="statTotal"
-                            class="text-[11px] px-1.5 py-0.2 rounded-full bg-slate-700/80 text-slate-200 font-semibold">0</span>
+                        class="whitespace-nowrap shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium transition flex items-center gap-1.5 bg-slate-800 text-white shadow-sm border border-slate-700">
+                        <span>All Concepts</span>
+                        <span id="statTotal" class="text-[11px] px-1.5 py-0.2 rounded-full bg-slate-700 text-slate-200 font-semibold">0</span>
+                    </button>
+                    <button onclick="setFilter('completed')" id="tab_completed"
+                        class="whitespace-nowrap shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium transition flex items-center gap-1.5 text-slate-400 hover:text-slate-200 hover:bg-slate-900 border border-transparent">
+                        <span class="w-2 h-2 rounded-full bg-blue-400"></span>
+                        <span>100% Evaluated</span>
+                        <span id="statCompleted" class="text-[11px] px-1.5 py-0.2 rounded-full bg-blue-500/15 text-blue-400 font-semibold">0</span>
+                    </button>
+                    <button onclick="setFilter('drafts')" id="tab_drafts"
+                        class="whitespace-nowrap shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium transition flex items-center gap-1.5 text-slate-400 hover:text-slate-200 hover:bg-slate-900 border border-transparent">
+                        <span class="w-2 h-2 rounded-full bg-purple-400"></span>
+                        <span>Drafts / In Progress</span>
+                        <span id="statDrafts" class="text-[11px] px-1.5 py-0.2 rounded-full bg-purple-500/15 text-purple-400 font-semibold">0</span>
                     </button>
                     <button onclick="setFilter('promising')" id="tab_promising"
-                        class="whitespace-nowrap shrink-0 px-2.5 sm:px-3 py-1 rounded-lg text-xs font-medium transition flex items-center gap-1.5 text-slate-400 hover:text-slate-200 hover:bg-slate-900 border border-transparent">
+                        class="whitespace-nowrap shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium transition flex items-center gap-1.5 text-slate-400 hover:text-slate-200 hover:bg-slate-900 border border-transparent">
                         <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
-                        <span>Full Speed</span>
-                        <span id="statPromising"
-                            class="text-[11px] px-1.5 py-0.2 rounded-full bg-emerald-500/15 text-emerald-400 font-semibold">0</span>
+                        <span>High Potential (75+)</span>
+                        <span id="statPromising" class="text-[11px] px-1.5 py-0.2 rounded-full bg-emerald-500/15 text-emerald-400 font-semibold">0</span>
                     </button>
                     <button onclick="setFilter('marginal')" id="tab_marginal"
-                        class="whitespace-nowrap shrink-0 px-2.5 sm:px-3 py-1 rounded-lg text-xs font-medium transition flex items-center gap-1.5 text-slate-400 hover:text-slate-200 hover:bg-slate-900 border border-transparent">
+                        class="whitespace-nowrap shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium transition flex items-center gap-1.5 text-slate-400 hover:text-slate-200 hover:bg-slate-900 border border-transparent">
                         <span class="w-2 h-2 rounded-full bg-amber-400"></span>
-                        <span>Marginal</span>
-                        <span id="statMarginal"
-                            class="text-[11px] px-1.5 py-0.2 rounded-full bg-amber-500/15 text-amber-400 font-semibold">0</span>
+                        <span>Marginal (50-74)</span>
+                        <span id="statMarginal" class="text-[11px] px-1.5 py-0.2 rounded-full bg-amber-500/15 text-amber-400 font-semibold">0</span>
                     </button>
                     <button onclick="setFilter('kill')" id="tab_kill"
-                        class="whitespace-nowrap shrink-0 px-2.5 sm:px-3 py-1 rounded-lg text-xs font-medium transition flex items-center gap-1.5 text-slate-400 hover:text-slate-200 hover:bg-slate-900 border border-transparent">
+                        class="whitespace-nowrap shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium transition flex items-center gap-1.5 text-slate-400 hover:text-slate-200 hover:bg-slate-900 border border-transparent">
                         <span class="w-2 h-2 rounded-full bg-rose-400"></span>
-                        <span>Kill</span>
-                        <span id="statKill"
-                            class="text-[11px] px-1.5 py-0.2 rounded-full bg-rose-500/15 text-rose-400 font-semibold">0</span>
+                        <span>High Risk (&le;50)</span>
+                        <span id="statKill" class="text-[11px] px-1.5 py-0.2 rounded-full bg-rose-500/15 text-rose-400 font-semibold">0</span>
                     </button>
                 </div>
 
-                <!-- Search & Sort Controls (Stretches cleanly across on mobile, compact on desktop) -->
+                <!-- Search & Sort Controls -->
                 <div class="flex items-center gap-2 flex-1 lg:max-w-md lg:justify-end">
-                    <!-- Search Input -->
                     <div class="relative flex-1 min-w-[140px]">
-                        <svg class="w-3.5 h-3.5 text-slate-500 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none"
-                            fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                        <svg class="w-3.5 h-3.5 text-slate-500 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                         </svg>
-                        <input type="text" id="searchInput" oninput="renderIdeas()" placeholder="Search ideas..."
+                        <input type="text" id="searchInput" oninput="renderIdeas()" placeholder="Search title, problem, category..."
                             class="w-full bg-slate-950 border border-slate-800 rounded-xl pl-8 pr-3 py-1.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 transition">
                     </div>
 
-                    <!-- Sort Selector -->
                     <div class="relative shrink-0">
                         <select id="sortBy" onchange="renderIdeas()"
                             class="bg-slate-950 border border-slate-800 text-slate-300 text-xs rounded-xl pl-3 pr-8 py-1.5 focus:outline-none focus:border-blue-500 transition cursor-pointer appearance-none">
-                            <option value="score_desc">Score: High → Low</option>
-                            <option value="score_asc">Score: Low → High</option>
+                            <option value="score_desc">Score: High &rarr; Low</option>
+                            <option value="score_asc">Score: Low &rarr; High</option>
+                            <option value="progress_desc">Progress: Most Complete</option>
                             <option value="date_desc">Newest First</option>
                             <option value="date_asc">Oldest First</option>
-                            <option value="title_asc">Title: A → Z</option>
-                            <option value="title_desc">Title: Z → A</option>
+                            <option value="title_asc">Title: A &rarr; Z</option>
                         </select>
-                        <svg class="w-3.5 h-3.5 text-slate-500 absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none"
-                            fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7">
-                            </path>
+                        <svg class="w-3.5 h-3.5 text-slate-500 absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                         </svg>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- Main Content Area -->
+        <!-- Main Ideas Grid -->
         <main>
-            <div id="emptyState"
-                class="hidden text-center py-16 bg-slate-900/40 rounded-2xl border border-slate-800/80">
-                <div
-                    class="w-12 h-12 rounded-full bg-blue-500/10 text-blue-400 flex items-center justify-center mx-auto mb-3">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z">
-                        </path>
+            <div id="emptyState" class="hidden text-center py-16 bg-slate-900/40 rounded-2xl border border-slate-800/80">
+                <div class="w-14 h-14 rounded-2xl bg-blue-500/10 text-blue-400 flex items-center justify-center mx-auto mb-3 border border-blue-500/20">
+                    <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
                     </svg>
                 </div>
-                <p class="text-slate-300 font-medium mb-1" id="emptyStateTitle">No ideas found</p>
-                <p class="text-xs text-slate-500 mb-4" id="emptyStateSubtitle">Click "New Idea" to evaluate your next
-                    big concept or clear filters.</p>
-                <button onclick="openModal()"
-                    class="inline-flex items-center gap-1.5 bg-blue-600 hover:bg-blue-500 text-white text-xs px-3.5 py-2 rounded-xl transition font-medium">
-                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <p class="text-slate-200 font-semibold mb-1" id="emptyStateTitle">No matching concepts found</p>
+                <p class="text-xs text-slate-400 mb-4 max-w-sm mx-auto" id="emptyStateSubtitle">Start by evaluating a new idea using the guided 4-step wizard.</p>
+                <button onclick="openWizard()"
+                    class="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-500 text-white text-xs px-4 py-2.5 rounded-xl transition font-medium shadow-md shadow-blue-600/20">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
                     </svg>
-                    Evaluate New Idea
+                    Evaluate New Concept
                 </button>
             </div>
-            <div id="ideasGrid" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+
+            <div id="ideasGrid" class="grid grid-cols-1 md:grid-cols-2 gap-5"></div>
         </main>
     </div>
 
-    <!-- Modal Form -->
-    <div id="ideaModal"
-        class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm hidden z-50 overflow-y-auto px-4 py-6 flex items-center justify-center">
-        <div
-            class="max-w-3xl w-full bg-slate-900 border border-slate-800 rounded-2xl shadow-2xl overflow-hidden my-auto flex flex-col max-h-[92vh]">
-            <!-- Modal Header -->
-            <div class="flex justify-between items-center px-6 py-4 border-b border-slate-800 bg-slate-900/90 shrink-0">
-                <div>
-                    <h2 id="modalTitle" class="text-lg font-semibold text-white">Evaluate New Idea</h2>
-                    <p class="text-xs text-slate-400">Score each dimension 0 (worst) to 10 (best) based on Personal MBA
-                        principles.</p>
-                </div>
-                <button onclick="closeModal()"
-                    class="text-slate-400 hover:text-white text-2xl leading-none p-1 transition">&times;</button>
-            </div>
-
-            <!-- Form Body -->
-            <form id="ideaForm" onsubmit="saveIdea(event)" class="p-6 space-y-6 overflow-y-auto flex-1">
-                <input type="hidden" id="ideaId">
-                <div class="grid grid-cols-1 gap-4">
-                    <div>
-                        <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1.5">Idea
-                            Title</label>
-                        <input type="text" id="title" required
-                            class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-blue-500 transition"
-                            placeholder="e.g., On-demand AI financial audit tool">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1.5">Quick
-                            Brain Dump / Notes</label>
-                        <textarea id="description" rows="2"
-                            class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2 text-white text-sm focus:outline-none focus:border-blue-500 transition"
-                            placeholder="Why will this work? Who is the ideal customer? Key assumptions..."></textarea>
-                    </div>
-                </div>
-
-                <div class="border-t border-slate-800 pt-5">
-                    <div class="mb-4">
-                        <h3 class="text-sm font-semibold text-slate-200">The 10-Factor Market Evaluation</h3>
-                        <p class="text-xs text-slate-400">Higher scores represent favorable market conditions, lower
-                            scores represent headwinds.</p>
-                    </div>
-
-                    <!-- 10 Factors Container -->
-                    <div id="factorsContainer" class="space-y-4">
-                        <!-- Factor items injected via JavaScript -->
-                    </div>
-                </div>
-
-                <div class="flex justify-between items-center pt-5 border-t border-slate-800 shrink-0">
-                    <div class="text-xs text-slate-400">
-                        Total Score: <span id="modalFooterScore" class="font-bold text-white text-sm">50</span> / 100
+    <!-- Multi-Step Evaluation Wizard Modal -->
+    <div id="wizardModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md hidden z-50 overflow-y-auto px-4 py-6 flex items-center justify-center">
+        <div class="max-w-4xl w-full bg-slate-900 border border-slate-800 rounded-2xl shadow-2xl overflow-hidden my-auto flex flex-col max-h-[94vh]">
+            
+            <!-- Modal Header with Progress Indicator -->
+            <div class="px-6 py-4 border-b border-slate-800 bg-slate-900/95 shrink-0 flex flex-col gap-3">
+                <div class="flex justify-between items-center">
+                    <div class="flex items-center gap-3">
+                        <span class="w-8 h-8 rounded-lg bg-blue-500/10 text-blue-400 border border-blue-500/20 flex items-center justify-center font-bold text-xs" id="wizardStepNumberBadge">1/4</span>
+                        <div>
+                            <h2 id="wizardModalTitle" class="text-base sm:text-lg font-bold text-white">Evaluate Idea Concept</h2>
+                            <p class="text-xs text-slate-400" id="wizardStepSubheading">Step 1: Core Concept & Value Proposition</p>
+                        </div>
                     </div>
                     <div class="flex items-center gap-3">
-                        <button type="button" onclick="closeModal()"
-                            class="px-4 py-2 rounded-xl text-sm text-slate-400 hover:text-white transition">Cancel</button>
-                        <button type="submit"
-                            class="bg-blue-600 hover:bg-blue-500 text-white px-5 py-2.5 rounded-xl text-sm font-medium transition shadow-lg shadow-blue-600/20 flex items-center gap-1.5">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M5 13l4 4L19 7"></path>
+                        <button type="button" onclick="saveCurrentDraftFromWizard()" class="text-xs text-slate-300 hover:text-white bg-slate-800 hover:bg-slate-700 px-3 py-1.5 rounded-lg border border-slate-700 transition flex items-center gap-1.5">
+                            <svg class="w-3.5 h-3.5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"></path>
                             </svg>
-                            Save Idea
+                            Save Draft
+                        </button>
+                        <button onclick="closeWizard()" class="text-slate-400 hover:text-white text-2xl leading-none p-1 transition">&times;</button>
+                    </div>
+                </div>
+
+                <!-- Wizard Progress Bar & Step Navigation Tabs -->
+                <div>
+                    <div class="w-full bg-slate-950 h-1.5 rounded-full overflow-hidden mb-2">
+                        <div id="wizardProgressBar" class="bg-gradient-to-r from-blue-500 to-indigo-500 h-full w-1/4 transition-all duration-300"></div>
+                    </div>
+                    <div class="grid grid-cols-4 gap-1 text-[11px] font-medium text-center">
+                        <button type="button" onclick="goToStep(1)" id="stepTab1" class="py-1 rounded-md text-blue-400 bg-blue-500/10 font-semibold truncate px-1">1. Thesis & ICP</button>
+                        <button type="button" onclick="goToStep(2)" id="stepTab2" class="py-1 rounded-md text-slate-400 hover:text-slate-200 truncate px-1">2. Market & Demand</button>
+                        <button type="button" onclick="goToStep(3)" id="stepTab3" class="py-1 rounded-md text-slate-400 hover:text-slate-200 truncate px-1">3. Feasibility & Cost</button>
+                        <button type="button" onclick="goToStep(4)" id="stepTab4" class="py-1 rounded-md text-slate-400 hover:text-slate-200 truncate px-1">4. Moat & Next Steps</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Form Body with Multi-Step Containers -->
+            <form id="wizardForm" onsubmit="finalizeIdea(event)" class="p-6 overflow-y-auto flex-1 space-y-6">
+                <input type="hidden" id="wizardIdeaId">
+
+                <!-- ================= STEP 1: Thesis & ICP ================= -->
+                <div id="stepContainer1" class="space-y-4">
+                    <div class="bg-blue-500/5 border border-blue-500/20 rounded-xl p-3.5 flex items-start gap-3">
+                        <svg class="w-5 h-5 text-blue-400 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        <div class="text-xs text-slate-300 leading-relaxed">
+                            <strong class="text-blue-300 font-semibold">Step 1 Guide:</strong> Clearly define the foundational problem, target customer profile, and business model. You can always save as a draft and refine your research later.
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                        <div class="sm:col-span-2">
+                            <label class="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-1.5">
+                                Concept Title <span class="text-rose-400">*</span>
+                            </label>
+                            <input type="text" id="title" required
+                                class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-blue-500 transition"
+                                placeholder="e.g., AuditFlow — Automated B2B Sales Tax Compliance for SaaS">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-1.5">
+                                Business Model / Category
+                            </label>
+                            <select id="category"
+                                class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2.5 text-white text-sm focus:outline-none focus:border-blue-500 transition cursor-pointer">
+                                <option value="B2B SaaS">B2B SaaS</option>
+                                <option value="Micro-SaaS">Micro-SaaS / Solo Tool</option>
+                                <option value="AI Tool / Wrapper">AI Agent / Vertical AI</option>
+                                <option value="Marketplace">Marketplace / Platform</option>
+                                <option value="Mobile App (B2C)">Mobile App (B2C)</option>
+                                <option value="Productized Service">Productized Service / Agency</option>
+                                <option value="E-Commerce / D2C">E-Commerce / D2C</option>
+                                <option value="Digital Content / Community">Digital Content / Community</option>
+                                <option value="Other">Other / Custom</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-1.5">
+                            One-Line Pitch / Tagline
+                        </label>
+                        <input type="text" id="tagline"
+                            class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2 text-white text-sm focus:outline-none focus:border-blue-500 transition"
+                            placeholder="e.g., Connect Stripe in 1-click and never worry about global nexus thresholds again.">
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-1.5">
+                                Target Customer Profile (ICP)
+                            </label>
+                            <textarea id="targetAudience" rows="2"
+                                class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2 text-white text-sm focus:outline-none focus:border-blue-500 transition"
+                                placeholder="Who is the exact buyer with budget? e.g., Remote SaaS founders making $20k-$100k MRR without an in-house CFO."></textarea>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-1.5">
+                                The Acute Pain / Problem
+                            </label>
+                            <textarea id="problem" rows="2"
+                                class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2 text-white text-sm focus:outline-none focus:border-blue-500 transition"
+                                placeholder="What painful headache or financial risk are they facing right now with current alternatives?"></textarea>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-1.5">
+                            Proposed Solution & Value Proposition
+                        </label>
+                        <textarea id="solution" rows="2"
+                            class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2 text-white text-sm focus:outline-none focus:border-blue-500 transition"
+                            placeholder="How does your offer solve this 10x better, faster, or cheaper than doing nothing or using manual spreadsheets?"></textarea>
+                    </div>
+                </div>
+
+                <!-- ================= STEP 2: Market & Demand Potential ================= -->
+                <div id="stepContainer2" class="space-y-4 hidden">
+                    <div class="bg-slate-950/80 border border-slate-800 rounded-xl p-3.5 flex items-start gap-3">
+                        <svg class="w-5 h-5 text-indigo-400 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                        </svg>
+                        <div class="text-xs text-slate-300 leading-relaxed">
+                            <strong class="text-indigo-300 font-semibold">Pillars 1 to 4:</strong> Gauge true commercial appetite. Move the sliders from 0 (Worst) to 10 (Best) and record your research notes and competitor findings.
+                        </div>
+                    </div>
+
+                    <div id="factorsStep2" class="space-y-4"></div>
+                </div>
+
+                <!-- ================= STEP 3: Feasibility & Unit Economics ================= -->
+                <div id="stepContainer3" class="space-y-4 hidden">
+                    <div class="bg-slate-950/80 border border-slate-800 rounded-xl p-3.5 flex items-start gap-3">
+                        <svg class="w-5 h-5 text-emerald-400 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        <div class="text-xs text-slate-300 leading-relaxed">
+                            <strong class="text-emerald-300 font-semibold">Pillars 5 to 8:</strong> Evaluate customer acquisition cost, delivery margins, and execution speed. A high score means low friction and high margins!
+                        </div>
+                    </div>
+
+                    <div id="factorsStep3" class="space-y-4"></div>
+                </div>
+
+                <!-- ================= STEP 4: Moat, Viability & Next Steps ================= -->
+                <div id="stepContainer4" class="space-y-4 hidden">
+                    <div class="bg-slate-950/80 border border-slate-800 rounded-xl p-3.5 flex items-start gap-3">
+                        <svg class="w-5 h-5 text-purple-400 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+                        </svg>
+                        <div class="text-xs text-slate-300 leading-relaxed">
+                            <strong class="text-purple-300 font-semibold">Pillars 9 to 10 & Validation Plan:</strong> Assess defensibility and define the #1 risky assumption to test before building.
+                        </div>
+                    </div>
+
+                    <div id="factorsStep4" class="space-y-4"></div>
+
+                    <div class="border-t border-slate-800/80 pt-4 space-y-4">
+                        <h3 class="text-xs font-semibold uppercase tracking-wider text-slate-300">Pre-Launch Validation Blueprint</h3>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs font-medium text-slate-300 mb-1">
+                                    #1 Riskiest Assumption to Test
+                                </label>
+                                <textarea id="riskiestAssumption" rows="2"
+                                    class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2 text-white text-xs focus:outline-none focus:border-blue-500 transition"
+                                    placeholder="e.g., Will SaaS founders be willing to share read-only Stripe API access with an unproven third party?"></textarea>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-medium text-slate-300 mb-1">
+                                    Next Fast Smoke Test / Experiment
+                                </label>
+                                <textarea id="nextExperiment" rows="2"
+                                    class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2 text-white text-xs focus:outline-none focus:border-blue-500 transition"
+                                    placeholder="e.g., Cold DM 20 founders on LinkedIn offering a free manual audit report to validate willingness to pay."></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Footer Navigation Controls -->
+                <div class="flex justify-between items-center pt-5 border-t border-slate-800 shrink-0">
+                    <div class="flex items-center gap-3">
+                        <span class="text-xs text-slate-400">Total Viability:</span>
+                        <span id="wizardTotalScoreBadge" class="text-sm font-bold text-white bg-slate-800 px-3 py-1 rounded-lg">50 / 100</span>
+                    </div>
+
+                    <div class="flex items-center gap-2.5">
+                        <button type="button" id="wizardPrevBtn" onclick="prevStep()"
+                            class="px-4 py-2 rounded-xl text-xs sm:text-sm text-slate-400 hover:text-white bg-slate-950 hover:bg-slate-800 border border-slate-800 transition disabled:opacity-40 disabled:pointer-events-none">
+                            &larr; Back
+                        </button>
+                        <button type="button" id="wizardNextBtn" onclick="nextStep()"
+                            class="bg-blue-600 hover:bg-blue-500 text-white px-5 py-2 rounded-xl text-xs sm:text-sm font-medium transition shadow-md shadow-blue-600/20 flex items-center gap-1.5">
+                            Next Step &rarr;
+                        </button>
+                        <button type="submit" id="wizardFinishBtn"
+                            class="hidden bg-emerald-600 hover:bg-emerald-500 text-white px-5 py-2 rounded-xl text-xs sm:text-sm font-semibold transition shadow-lg shadow-emerald-600/25 flex items-center gap-1.5">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                            </svg>
+                            Save & Finish Evaluation
                         </button>
                     </div>
                 </div>
@@ -273,29 +546,56 @@
         </div>
     </div>
 
+    <!-- Executive Report & Overview Modal (Multi-Page Print-to-PDF ready) -->
+    <div id="reportModal" class="fixed inset-0 bg-slate-950/85 backdrop-blur-md hidden z-50 overflow-y-auto px-3 sm:px-4 py-6 flex items-center justify-center">
+        <div class="max-w-4xl w-full bg-slate-900 border border-slate-800 rounded-2xl shadow-2xl overflow-hidden my-auto flex flex-col max-h-[95vh]">
+            
+            <!-- Report Header -->
+            <div class="no-print px-6 py-4 border-b border-slate-800 bg-slate-900/95 flex justify-between items-center shrink-0">
+                <div class="flex items-center gap-2.5">
+                    <span class="w-8 h-8 rounded-lg bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 flex items-center justify-center font-bold text-xs">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                    </span>
+                    <div>
+                        <h2 class="text-base font-bold text-white">Executive Evaluation Brief</h2>
+                        <p class="text-xs text-slate-400">Comprehensive diagnostic & risk footprint</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-2">
+                    <button onclick="window.print()" class="bg-blue-600 hover:bg-blue-500 text-white px-3.5 py-1.5 rounded-xl text-xs font-semibold transition shadow-md shadow-blue-600/20 flex items-center gap-1.5">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path>
+                        </svg>
+                        Print / Save PDF
+                    </button>
+                    <button onclick="closeReportModal()" class="text-slate-400 hover:text-white text-2xl leading-none p-1 transition">&times;</button>
+                </div>
+            </div>
+
+            <!-- Report Content Body -->
+            <div id="reportContent" class="p-6 sm:p-8 overflow-y-auto space-y-6 flex-1 text-slate-200">
+                <!-- Dynamically populated report content -->
+            </div>
+        </div>
+    </div>
+
     <!-- Custom Delete Confirmation Modal -->
-    <div id="deleteModal"
-        class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm hidden z-50 overflow-y-auto px-4 py-6 flex items-center justify-center">
-        <div
-            class="max-w-md w-full bg-slate-900 border border-slate-800 rounded-2xl shadow-2xl overflow-hidden p-6 space-y-4 my-auto">
+    <div id="deleteModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm hidden z-50 overflow-y-auto px-4 py-6 flex items-center justify-center">
+        <div class="max-w-md w-full bg-slate-900 border border-slate-800 rounded-2xl shadow-2xl overflow-hidden p-6 space-y-4 my-auto">
             <div class="flex items-center gap-3.5">
-                <div
-                    class="w-10 h-10 rounded-xl bg-rose-500/10 text-rose-400 flex items-center justify-center shrink-0 border border-rose-500/20">
+                <div class="w-10 h-10 rounded-xl bg-rose-500/10 text-rose-400 flex items-center justify-center shrink-0 border border-rose-500/20">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
-                        </path>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
                     </svg>
                 </div>
                 <div>
-                    <h3 class="text-base font-semibold text-white">Move to Graveyard?</h3>
-                    <p class="text-xs text-slate-400">Permanently delete this evaluated idea.</p>
+                    <h3 class="text-base font-semibold text-white">Delete Concept?</h3>
+                    <p class="text-xs text-slate-400">Permanently remove this idea evaluation.</p>
                 </div>
             </div>
 
             <p class="text-xs text-slate-300 bg-slate-950/80 border border-slate-800/80 rounded-xl p-3 leading-relaxed">
-                Are you sure you want to delete <strong id="deleteIdeaTitle" class="text-white">this idea</strong>? This
-                cannot be undone.
+                Are you sure you want to delete <strong id="deleteIdeaTitle" class="text-white">this idea</strong>? This action cannot be undone.
             </p>
 
             <div class="flex items-center justify-end gap-2.5 pt-2">
@@ -304,9 +604,7 @@
                 <button type="button" onclick="confirmDeleteIdea()"
                     class="bg-rose-600 hover:bg-rose-500 text-white px-4 py-2 rounded-xl text-xs sm:text-sm font-medium transition shadow-lg shadow-rose-600/20 flex items-center gap-1.5">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
-                        </path>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
                     </svg>
                     Delete Idea
                 </button>
@@ -315,253 +613,785 @@
     </div>
 
     <!-- Notification Toast -->
-    <div id="toast"
-        class="fixed bottom-5 right-5 bg-slate-900 border border-slate-700 text-white text-xs px-4 py-3 rounded-xl shadow-2xl transition-opacity duration-300 opacity-0 pointer-events-none z-50 flex items-center gap-2">
+    <div id="toast" class="fixed bottom-5 right-5 bg-slate-900 border border-slate-700 text-white text-xs px-4 py-3 rounded-xl shadow-2xl transition-opacity duration-300 opacity-0 pointer-events-none z-50 flex items-center gap-2">
+        <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
         <span id="toastMsg">Notification</span>
     </div>
 
     <script>
-        // Definitions for the 10 Factors based on "The Personal MBA" by Josh Kaufman
+        // --- 10 Pillars Viability Framework Definitions ---
         const factorDefinitions = [
             {
                 id: 'urgency',
+                step: 2,
                 number: 1,
-                name: 'Urgency',
-                prompt: 'How badly do people want or need this right now?',
-                lowScale: '0 = Low priority / "nice to have" / can wait indefinitely',
-                highScale: '10 = Urgent crisis / emergency / immediate burning pain'
+                name: 'Urgency & Pain Level',
+                prompt: 'How desperately do prospective customers need a solution right now?',
+                plainGuide: 'Are they losing money, facing legal deadlines, or burning time every single day?',
+                lowScale: '0 = "Nice to have" / can wait months / low priority',
+                midScale: '5 = Moderate annoyance / occasional friction',
+                highScale: '10 = Hair-on-fire crisis / emergency pain / immediate buy',
+                notesPrompt: 'e.g., Quotes from discovery calls, regulatory deadlines, or active forum complaints...'
             },
             {
                 id: 'marketSize',
+                step: 2,
                 number: 2,
-                name: 'Market Size',
-                prompt: 'How many people are actively purchasing things like this?',
-                lowScale: '0 = Tiny niche / very few potential buyers',
-                highScale: '10 = Massive mass market / millions of active buyers'
+                name: 'Market Size & Reach',
+                prompt: 'How many potential customers are actively searching or paying for this category?',
+                plainGuide: 'Is this a hyper-niche with only 50 companies, or a broad market of millions?',
+                lowScale: '0 = Tiny microscopic niche (< 500 total potential buyers)',
+                midScale: '5 = Solid niche market (10k - 100k buyers)',
+                highScale: '10 = Massive expanding market with millions of active buyers',
+                notesPrompt: 'e.g., Estimated TAM/SAM, search volume for keywords, competitor user counts...'
             },
             {
                 id: 'pricingPotential',
+                step: 2,
                 number: 3,
-                name: 'Pricing Potential',
-                prompt: 'What is the highest price a typical purchaser will spend for a solution?',
-                lowScale: '0 = Low price / pennies / free alternatives prevail',
-                highScale: '10 = High-ticket / thousands or millions per transaction'
-            },
-            {
-                id: 'cac',
-                number: 4,
-                name: 'Customer Acquisition Cost (CAC)',
-                prompt: 'How easy and inexpensive is it to acquire a new paying customer?',
-                lowScale: '0 = Very expensive / intense sales cycle / hard to find',
-                highScale: '10 = Easy / viral / low cost / customers actively search for you'
-            },
-            {
-                id: 'vdc',
-                number: 5,
-                name: 'Value Delivery Cost',
-                prompt: 'How cheap and simple is it to create and deliver the value offered?',
-                lowScale: '0 = Heavy labor / high inventory & logistics costs',
-                highScale: '10 = Automated / digital / zero marginal delivery cost'
-            },
-            {
-                id: 'uniqueness',
-                number: 6,
-                name: 'Uniqueness of Offer',
-                prompt: 'How unique is your offer and how hard is it for competitors to copy you?',
-                lowScale: '0 = Commodity / saturated with identical alternatives',
-                highScale: '10 = Highly unique / strong moat / very hard to copy'
-            },
-            {
-                id: 'speedToMarket',
-                number: 7,
-                name: 'Speed to Market',
-                prompt: 'How quickly can you build something viable and start selling?',
-                lowScale: '0 = Takes years of R&D / heavy regulatory hurdles',
-                highScale: '10 = Can build & launch in days or a few weeks'
-            },
-            {
-                id: 'upfrontInvestment',
-                number: 8,
-                name: 'Up-Front Investment',
-                prompt: 'How little capital and resources do you need before ready to launch?',
-                lowScale: '0 = Needs massive capital / heavy funding / expensive tooling',
-                highScale: '10 = Bootstrap / almost zero capital required to start'
+                name: 'Pricing Power & Value',
+                prompt: 'What is the highest realistic price a typical buyer will readily pay?',
+                plainGuide: 'Can you charge $500/mo B2B, or are consumers only expecting a $1.99 one-time app?',
+                lowScale: '0 = Low price / pennies / free alternatives dominate',
+                midScale: '5 = Moderate pricing ($10 - $50/mo)',
+                highScale: '10 = High ticket ($500 - $10,000+ per month or transaction)',
+                notesPrompt: 'e.g., Competitor pricing tiers, cost of the problem being solved...'
             },
             {
                 id: 'upsellPotential',
+                step: 2,
+                number: 4,
+                name: 'Upsell & Expansion Potential',
+                prompt: 'Are there natural add-on products, higher tiers, or recurring services to offer?',
+                plainGuide: 'Once a customer signs up, can you expand their lifetime value over time?',
+                lowScale: '0 = One-time transaction with zero repeat purchases',
+                midScale: '5 = Occasional repeat buys or annual renewals',
+                highScale: '10 = High retention subscription with endless expansion tiers & add-ons',
+                notesPrompt: 'e.g., Potential premium modules, enterprise SLA, usage-based tiers...'
+            },
+            {
+                id: 'cac',
+                step: 3,
+                number: 5,
+                name: 'Customer Acquisition Ease (CAC)',
+                prompt: 'How easy, fast, and cost-effective is it to reach and convert paying buyers?',
+                plainGuide: 'Do customers search for this organically, or do you need a 6-month enterprise sales army?',
+                lowScale: '0 = Extremely difficult / very high ad cost / hard-to-reach gatekeepers',
+                midScale: '5 = Standard PPC / direct outbound / moderate sales effort',
+                highScale: '10 = Built-in virality, strong SEO intent, or warm existing distribution',
+                notesPrompt: 'e.g., Distribution channels, keyword CPC, target communities, partner ecosystems...'
+            },
+            {
+                id: 'vdc',
+                step: 3,
+                number: 6,
+                name: 'Value Delivery Cost & Margins',
+                prompt: 'How cheap and automated is it to deliver the promised value?',
+                plainGuide: 'Is it high-margin digital software (90%+ gross margin) or heavy manual labor / physical inventory?',
+                lowScale: '0 = Heavy manual consulting, high inventory risk, low profit margin',
+                midScale: '5 = Hybrid delivery / moderate hosting, API or compute costs',
+                highScale: '10 = 90%+ gross margin / fully automated digital fulfillment',
+                notesPrompt: 'e.g., API costs (e.g. OpenAI tokens), cloud hosting, serverless infra, or human support...'
+            },
+            {
+                id: 'speedToMarket',
+                step: 3,
+                number: 7,
+                name: 'Speed to Market & MVP Velocity',
+                prompt: 'How quickly can you build a working prototype and collect your first dollar?',
+                plainGuide: 'Can you launch a functional v1 in 2 weeks, or does it take 2 years of deep tech R&D?',
+                lowScale: '0 = Multi-year R&D, heavy regulatory or medical compliance',
+                midScale: '5 = 2 to 3 months of focused full-stack development',
+                highScale: '10 = Can build & launch viable MVP in 7 to 14 days using existing tools',
+                notesPrompt: 'e.g., Tech stack, no-code feasibility, existing APIs, boilerplate speed...'
+            },
+            {
+                id: 'upfrontInvestment',
+                step: 3,
+                number: 8,
+                name: 'Up-Front Capital Efficiency',
+                prompt: 'How little money and physical resources are required before launch?',
+                plainGuide: 'Can you bootstrap this from your laptop, or do you need $500k in venture capital?',
+                lowScale: '0 = Requires massive initial capital, factories, or specialized equipment',
+                midScale: '5 = Needs moderate budget ($2k-$10k) for licenses & design',
+                highScale: '10 = Can bootstrap for under $100 using existing personal tools',
+                notesPrompt: 'e.g., Estimated startup costs: domain, hosting, software licenses, legal...'
+            },
+            {
+                id: 'uniqueness',
+                step: 4,
                 number: 9,
-                name: 'Upsell Potential',
-                prompt: 'Are there related secondary offers or recurring services to present to buyers?',
-                lowScale: '0 = One-and-done purchase / zero repeat transactions',
-                highScale: '10 = Endless upsells, cross-sells, or recurring subscriptions'
+                name: 'Uniqueness & Competitive Moat',
+                prompt: 'How unique is your value proposition and how difficult is it for competitors to copy?',
+                plainGuide: 'Why will buyers choose you over incumbents? What is your proprietary advantage?',
+                lowScale: '0 = Saturated commodity / easily cloned overnight by anyone',
+                midScale: '5 = Clear positioning differentiation or niche vertical focus',
+                highScale: '10 = Strong proprietary data, network effect, or deep domain expertise',
+                notesPrompt: 'e.g., Existing competitors, your unfair advantage, proprietary workflow or data...'
             },
             {
                 id: 'evergreenPotential',
+                step: 4,
                 number: 10,
-                name: 'Evergreen Potential',
-                prompt: 'Once the initial offer is created, how little continuous rework is required to keep selling?',
-                lowScale: '0 = High maintenance / constant custom manual work',
-                highScale: '10 = Build once, sell forever with minimal ongoing effort'
+                name: 'Evergreen & Long-Term Viability',
+                prompt: 'Is this a sustainable long-term business need or a temporary short-lived fad?',
+                plainGuide: 'Will this still be a valuable problem in 5 to 10 years regardless of market shifts?',
+                lowScale: '0 = Temporary hype / short fad / dependent on unstable platform loopholes',
+                midScale: '5 = Stable 2-3 year market cycle with regular updates needed',
+                highScale: '10 = Timeless fundamental business need / durable long-term compounding',
+                notesPrompt: 'e.g., Core underlying human or business motivation, platform dependency risks...'
             }
         ];
 
         const factorKeys = factorDefinitions.map(f => f.id);
-        let ideas = JSON.parse(localStorage.getItem('pwa_ideas') || '[]');
-        let currentFilter = 'all'; // 'all', 'promising', 'marginal', 'kill'
+        let ideas = JSON.parse(localStorage.getItem('ideavault_pro_ideas') || localStorage.getItem('pwa_ideas') || '[]');
+        let currentFilter = 'all';
+        let currentWizardStep = 1;
+        let radarChartInstance = null;
 
-        // Build factor UI in modal
+        // Sample idea seed if brand new
+        if (ideas.length === 0) {
+            ideas = [
+                {
+                    id: 'seed_idea_1',
+                    title: 'AuditFlow — Automated B2B Sales Tax & Nexus Tracker',
+                    category: 'B2B SaaS',
+                    tagline: 'Connect Stripe in 1-click and never worry about global nexus thresholds or state tax audits again.',
+                    targetAudience: 'Bootstrapped & venture-backed SaaS founders doing $20k–$150k MRR across multiple US states and EU.',
+                    problem: 'Founders have no idea when they cross economic nexus limits until an expensive state audit arrives with severe back-tax penalties.',
+                    solution: 'A lightweight dashboard that reads Stripe webhooks, monitors state-by-state thresholds in real-time, and generates 1-click filing sheets.',
+                    riskiestAssumption: 'Can we build user trust fast enough to get Stripe read-only API access without SOC-2 compliance initially?',
+                    nextExperiment: 'Manually review transaction exports for 5 founder friends and deliver free PDF compliance audits.',
+                    scores: {
+                        urgency: 9,
+                        marketSize: 7,
+                        pricingPotential: 8,
+                        upsellPotential: 8,
+                        cac: 7,
+                        vdc: 9,
+                        speedToMarket: 8,
+                        upfrontInvestment: 9,
+                        uniqueness: 7,
+                        evergreenPotential: 9
+                    },
+                    notes: {
+                        urgency: 'Founders panic when they receive state tax notices; compliance is non-negotiable.',
+                        pricingPotential: 'Competitors like Anrok/TaxJar charge $200-$1,000/mo. We can price at $99/mo sweet spot.',
+                        cac: 'Can distribute via Stripe App Marketplace and accounting partner referral channels.',
+                        vdc: 'Pure SaaS with webhooks and scheduled cron jobs. Margins > 90%.'
+                    },
+                    totalScore: 81,
+                    completionPct: 100,
+                    createdAt: Date.now() - 86400000 * 3,
+                    date: new Date(Date.now() - 86400000 * 3).toLocaleDateString(),
+                    updatedAt: Date.now()
+                }
+            ];
+            saveToStorage();
+        }
+
+        // Initialize Factor Form Steps
         function initFactorsUI() {
-            const container = document.getElementById('factorsContainer');
-            container.innerHTML = factorDefinitions.map(f => `
-                <div class="bg-slate-950/70 border border-slate-800/80 rounded-xl p-4 hover:border-slate-700 transition">
-                    <div class="flex items-center justify-between gap-2 mb-1">
-                        <div class="flex items-center gap-2">
-                            <span class="text-xs font-semibold text-blue-400 bg-blue-500/10 px-2 py-0.5 rounded-md">${f.number}</span>
-                            <label for="${f.id}" class="text-sm font-medium text-slate-200">${f.name}</label>
+            const step2Container = document.getElementById('factorsStep2');
+            const step3Container = document.getElementById('factorsStep3');
+            const step4Container = document.getElementById('factorsStep4');
+
+            const renderFactorItem = (f) => `
+                <div class="bg-slate-950/70 border border-slate-800/80 rounded-xl p-4 hover:border-slate-700 transition space-y-3">
+                    <div class="flex items-start justify-between gap-3">
+                        <div>
+                            <div class="flex items-center gap-2 mb-0.5">
+                                <span class="text-xs font-bold text-blue-400 bg-blue-500/10 px-2 py-0.5 rounded-md border border-blue-500/20">${f.number}</span>
+                                <h4 class="text-sm font-semibold text-slate-100">${f.name}</h4>
+                            </div>
+                            <p class="text-xs text-slate-300">${f.prompt}</p>
+                            <p class="text-[11px] text-blue-400/90 font-medium mt-0.5">${f.plainGuide}</p>
                         </div>
-                        <div class="flex items-center gap-1.5">
+                        <div class="flex items-center gap-1.5 shrink-0">
                             <span class="text-xs text-slate-400">Score:</span>
-                            <span id="val_${f.id}" class="text-xs font-bold text-white bg-slate-800 px-2.5 py-0.5 rounded-md min-w-[28px] text-center">5</span>
+                            <span id="badge_${f.id}" class="text-xs font-bold text-white bg-slate-800 px-2.5 py-0.5 rounded-md min-w-[32px] text-center border border-slate-700">5</span>
                         </div>
                     </div>
-                    <p class="text-xs text-slate-400 mb-2.5">${f.prompt}</p>
-                    <input type="range" id="${f.id}" min="0" max="10" value="5" oninput="updateScoreVal('${f.id}')" class="w-full mb-2 cursor-pointer">
-                    <div class="flex justify-between items-center text-[10px] text-slate-500 gap-2">
-                        <span class="truncate" title="${escapeHtml(f.lowScale)}">${f.lowScale}</span>
-                        <span class="truncate text-right" title="${escapeHtml(f.highScale)}">${f.highScale}</span>
+
+                    <div>
+                        <input type="range" id="${f.id}" min="0" max="10" value="5" oninput="updateScoreVal('${f.id}')" class="w-full cursor-pointer">
+                        <div class="flex justify-between items-center text-[10px] text-slate-400 mt-1 gap-2">
+                            <span class="truncate" title="${escapeHtml(f.lowScale)}">${f.lowScale}</span>
+                            <span class="truncate text-center text-slate-500 hidden sm:inline" title="${escapeHtml(f.midScale)}">${f.midScale}</span>
+                            <span class="truncate text-right" title="${escapeHtml(f.highScale)}">${f.highScale}</span>
+                        </div>
+                    </div>
+
+                    <div class="pt-2 border-t border-slate-900">
+                        <label class="block text-[11px] font-medium text-slate-400 mb-1 flex items-center justify-between">
+                            <span>Research & Evidence Notes</span>
+                            <span class="text-[10px] text-slate-500">Log competitor pricing, data & quotes</span>
+                        </label>
+                        <textarea id="notes_${f.id}" rows="1"
+                            class="w-full bg-slate-900 border border-slate-800 rounded-lg px-3 py-1.5 text-xs text-white placeholder-slate-600 focus:outline-none focus:border-blue-500 transition resize-y"
+                            placeholder="${escapeHtml(f.notesPrompt)}"></textarea>
                     </div>
                 </div>
-            `).join('');
+            `;
+
+            if (step2Container) {
+                step2Container.innerHTML = factorDefinitions.filter(f => f.step === 2).map(renderFactorItem).join('');
+            }
+            if (step3Container) {
+                step3Container.innerHTML = factorDefinitions.filter(f => f.step === 3).map(renderFactorItem).join('');
+            }
+            if (step4Container) {
+                step4Container.innerHTML = factorDefinitions.filter(f => f.step === 4).map(renderFactorItem).join('');
+            }
         }
 
         initFactorsUI();
 
         function updateScoreVal(factor) {
-            const val = document.getElementById(factor).value;
-            const badge = document.getElementById(`val_${factor}`);
-            badge.innerText = val;
-
-            // Color code the individual score badge
-            if (val >= 8) {
-                badge.className = 'text-xs font-bold text-emerald-400 bg-emerald-500/15 px-2.5 py-0.5 rounded-md min-w-[28px] text-center';
-            } else if (val >= 5) {
-                badge.className = 'text-xs font-bold text-blue-400 bg-blue-500/15 px-2.5 py-0.5 rounded-md min-w-[28px] text-center';
-            } else {
-                badge.className = 'text-xs font-bold text-slate-300 bg-slate-800 px-2.5 py-0.5 rounded-md min-w-[28px] text-center';
+            const el = document.getElementById(factor);
+            if (!el) return;
+            const val = parseInt(el.value);
+            const badge = document.getElementById(`badge_${factor}`);
+            if (badge) {
+                badge.innerText = val;
+                if (val >= 8) {
+                    badge.className = 'text-xs font-bold text-emerald-400 bg-emerald-500/15 border border-emerald-500/30 px-2.5 py-0.5 rounded-md min-w-[32px] text-center';
+                } else if (val >= 5) {
+                    badge.className = 'text-xs font-bold text-blue-400 bg-blue-500/15 border border-blue-500/30 px-2.5 py-0.5 rounded-md min-w-[32px] text-center';
+                } else {
+                    badge.className = 'text-xs font-bold text-rose-400 bg-rose-500/15 border border-rose-500/30 px-2.5 py-0.5 rounded-md min-w-[32px] text-center';
+                }
             }
-
-            recalcModalTotal();
+            recalcWizardTotal();
         }
 
-        function recalcModalTotal() {
+        function recalcWizardTotal() {
             let total = 0;
             factorKeys.forEach(f => {
                 const el = document.getElementById(f);
                 if (el) total += parseInt(el.value || 0);
             });
-
-            const footerScore = document.getElementById('modalFooterScore');
-            if (footerScore) footerScore.innerText = total;
+            const badge = document.getElementById('wizardTotalScoreBadge');
+            if (badge) badge.innerText = `${total} / 100`;
+            return total;
         }
 
-        function setFilter(filter) {
-            currentFilter = filter;
-            updateFilterTabsUI();
-            renderIdeas();
+        // Calculate progress percentage of an idea
+        function computeIdeaCompletion(data) {
+            let totalWeight = 0;
+            let completedWeight = 0;
+
+            // Title & Core info
+            totalWeight += 2;
+            if (data.title && data.title.trim().length > 2) completedWeight += 2;
+
+            totalWeight += 1;
+            if (data.targetAudience && data.targetAudience.trim().length > 3) completedWeight += 1;
+
+            totalWeight += 1;
+            if (data.problem && data.problem.trim().length > 3) completedWeight += 1;
+
+            totalWeight += 1;
+            if (data.solution && data.solution.trim().length > 3) completedWeight += 1;
+
+            // 10 factors scored
+            totalWeight += 5;
+            if (data.scores && Object.keys(data.scores).length >= 10) completedWeight += 5;
+
+            // Notes logged
+            let notesCount = 0;
+            if (data.notes) {
+                Object.values(data.notes).forEach(n => {
+                    if (n && n.trim().length > 0) notesCount++;
+                });
+            }
+            totalWeight += 4;
+            if (notesCount >= 3) completedWeight += 4;
+            else if (notesCount >= 1) completedWeight += 2;
+
+            // Riskiest assumption
+            totalWeight += 1;
+            if (data.riskiestAssumption && data.riskiestAssumption.trim().length > 3) completedWeight += 1;
+
+            const pct = Math.min(100, Math.round((completedWeight / totalWeight) * 100));
+            return pct;
         }
 
-        function updateFilterTabsUI() {
-            const tabs = ['all', 'promising', 'marginal', 'kill'];
-            tabs.forEach(t => {
-                const btn = document.getElementById(`tab_${t}`);
-                if (!btn) return;
-                if (currentFilter === t) {
-                    btn.className = 'whitespace-nowrap shrink-0 px-2.5 sm:px-3 py-1 rounded-lg text-xs font-medium transition flex items-center gap-1.5 bg-slate-800 text-white shadow-sm border border-slate-700/60';
-                } else {
-                    btn.className = 'whitespace-nowrap shrink-0 px-2.5 sm:px-3 py-1 rounded-lg text-xs font-medium transition flex items-center gap-1.5 text-slate-400 hover:text-slate-200 hover:bg-slate-900 border border-transparent';
+        // --- Wizard Step Navigation ---
+        function goToStep(stepNumber) {
+            currentWizardStep = stepNumber;
+            for (let i = 1; i <= 4; i++) {
+                const container = document.getElementById(`stepContainer${i}`);
+                const tab = document.getElementById(`stepTab${i}`);
+                if (container) {
+                    if (i === stepNumber) container.classList.remove('hidden');
+                    else container.classList.add('hidden');
                 }
-            });
+                if (tab) {
+                    if (i === stepNumber) {
+                        tab.className = 'py-1 rounded-md text-blue-400 bg-blue-500/15 font-semibold truncate px-1 border border-blue-500/30';
+                    } else if (i < stepNumber) {
+                        tab.className = 'py-1 rounded-md text-emerald-400 bg-emerald-500/10 font-medium truncate px-1';
+                    } else {
+                        tab.className = 'py-1 rounded-md text-slate-400 hover:text-slate-200 truncate px-1';
+                    }
+                }
+            }
+
+            // Update Progress Bar
+            const bar = document.getElementById('wizardProgressBar');
+            if (bar) bar.style.width = `${(stepNumber / 4) * 100}%`;
+
+            const badge = document.getElementById('wizardStepNumberBadge');
+            if (badge) badge.innerText = `${stepNumber}/4`;
+
+            const subheadings = [
+                'Step 1: Core Concept & Value Proposition',
+                'Step 2: Market & Commercial Demand Potential',
+                'Step 3: Execution Feasibility & Unit Economics',
+                'Step 4: Competitive Moat & Validation Plan'
+            ];
+            const subTitleEl = document.getElementById('wizardStepSubheading');
+            if (subTitleEl) subTitleEl.innerText = subheadings[stepNumber - 1];
+
+            // Nav buttons
+            const prevBtn = document.getElementById('wizardPrevBtn');
+            const nextBtn = document.getElementById('wizardNextBtn');
+            const finishBtn = document.getElementById('wizardFinishBtn');
+
+            if (prevBtn) prevBtn.disabled = (stepNumber === 1);
+
+            if (stepNumber === 4) {
+                if (nextBtn) nextBtn.classList.add('hidden');
+                if (finishBtn) finishBtn.classList.remove('hidden');
+            } else {
+                if (nextBtn) nextBtn.classList.remove('hidden');
+                if (finishBtn) finishBtn.classList.add('hidden');
+            }
         }
 
-        function openModal(id = null) {
-            document.getElementById('ideaModal').classList.remove('hidden');
+        function nextStep() {
+            if (currentWizardStep === 1) {
+                const titleInput = document.getElementById('title');
+                if (!titleInput.value.trim()) {
+                    titleInput.focus();
+                    showToast('Please enter an idea title to continue');
+                    return;
+                }
+            }
+            if (currentWizardStep < 4) {
+                goToStep(currentWizardStep + 1);
+            }
+        }
+
+        function prevStep() {
+            if (currentWizardStep > 1) {
+                goToStep(currentWizardStep - 1);
+            }
+        }
+
+        // --- Open & Close Wizard ---
+        function openWizard(id = null) {
+            document.getElementById('wizardModal').classList.remove('hidden');
+            goToStep(1);
+
             if (id !== null && id !== undefined && id !== '') {
                 const idStr = String(id);
                 const idea = ideas.find(i => String(i.id) === idStr);
                 if (!idea) return;
-                document.getElementById('modalTitle').innerText = 'Edit Idea Evaluation';
-                document.getElementById('ideaId').value = idea.id;
+                document.getElementById('wizardModalTitle').innerText = 'Edit Concept Evaluation';
+                document.getElementById('wizardIdeaId').value = idea.id;
                 document.getElementById('title').value = idea.title || '';
-                document.getElementById('description').value = idea.description || '';
+                document.getElementById('category').value = idea.category || 'B2B SaaS';
+                document.getElementById('tagline').value = idea.tagline || '';
+                document.getElementById('targetAudience').value = idea.targetAudience || '';
+                document.getElementById('problem').value = idea.problem || '';
+                document.getElementById('solution').value = idea.solution || '';
+                document.getElementById('riskiestAssumption').value = idea.riskiestAssumption || '';
+                document.getElementById('nextExperiment').value = idea.nextExperiment || '';
+
                 factorKeys.forEach(f => {
-                    const val = (idea.scores && idea.scores[f] !== undefined) ? idea.scores[f] : 5;
-                    document.getElementById(f).value = val;
+                    const score = (idea.scores && idea.scores[f] !== undefined) ? idea.scores[f] : 5;
+                    const el = document.getElementById(f);
+                    if (el) el.value = score;
                     updateScoreVal(f);
+
+                    const notesEl = document.getElementById(`notes_${f}`);
+                    if (notesEl) notesEl.value = (idea.notes && idea.notes[f]) ? idea.notes[f] : '';
                 });
             } else {
-                document.getElementById('modalTitle').innerText = 'Evaluate New Idea';
-                document.getElementById('ideaForm').reset();
-                document.getElementById('ideaId').value = '';
+                document.getElementById('wizardModalTitle').innerText = 'Evaluate New Idea Concept';
+                document.getElementById('wizardForm').reset();
+                document.getElementById('wizardIdeaId').value = '';
+                document.getElementById('category').value = 'B2B SaaS';
                 factorKeys.forEach(f => {
-                    document.getElementById(f).value = 5;
+                    const el = document.getElementById(f);
+                    if (el) el.value = 5;
                     updateScoreVal(f);
+                    const notesEl = document.getElementById(`notes_${f}`);
+                    if (notesEl) notesEl.value = '';
                 });
             }
-            recalcModalTotal();
+            recalcWizardTotal();
         }
 
-        function closeModal() {
-            document.getElementById('ideaModal').classList.add('hidden');
+        function closeWizard() {
+            document.getElementById('wizardModal').classList.add('hidden');
         }
 
-        function saveIdea(e) {
-            e.preventDefault();
-            const id = document.getElementById('ideaId').value || ('idea_' + Date.now());
-            const title = document.getElementById('title').value.trim();
-            const description = document.getElementById('description').value.trim();
+        function collectWizardFormData() {
+            const id = document.getElementById('wizardIdeaId').value || ('idea_' + Date.now());
+            const title = document.getElementById('title').value.trim() || 'Untitled Concept';
+            const category = document.getElementById('category').value;
+            const tagline = document.getElementById('tagline').value.trim();
+            const targetAudience = document.getElementById('targetAudience').value.trim();
+            const problem = document.getElementById('problem').value.trim();
+            const solution = document.getElementById('solution').value.trim();
+            const riskiestAssumption = document.getElementById('riskiestAssumption').value.trim();
+            const nextExperiment = document.getElementById('nextExperiment').value.trim();
 
             let scores = {};
+            let notes = {};
             let totalScore = 0;
+
             factorKeys.forEach(f => {
-                const val = parseInt(document.getElementById(f).value);
-                scores[f] = val;
-                totalScore += val;
+                const el = document.getElementById(f);
+                const scoreVal = el ? parseInt(el.value) : 5;
+                scores[f] = scoreVal;
+                totalScore += scoreVal;
+
+                const noteEl = document.getElementById(`notes_${f}`);
+                if (noteEl && noteEl.value.trim()) {
+                    notes[f] = noteEl.value.trim();
+                }
             });
 
             const idStr = String(id);
             const existingIndex = ideas.findIndex(i => String(i.id) === idStr);
             const now = new Date();
+
             const ideaData = {
                 id,
                 title,
-                description,
+                category,
+                tagline,
+                targetAudience,
+                problem,
+                solution,
+                riskiestAssumption,
+                nextExperiment,
                 scores,
+                notes,
                 totalScore,
                 createdAt: (existingIndex > -1 && ideas[existingIndex].createdAt) ? ideas[existingIndex].createdAt : Date.now(),
                 date: (existingIndex > -1 && ideas[existingIndex].date) ? ideas[existingIndex].date : now.toLocaleDateString(),
                 updatedAt: Date.now()
             };
 
+            ideaData.completionPct = computeIdeaCompletion(ideaData);
+            return { ideaData, existingIndex };
+        }
+
+        function saveCurrentDraftFromWizard() {
+            const { ideaData, existingIndex } = collectWizardFormData();
             if (existingIndex > -1) {
                 ideas[existingIndex] = ideaData;
-                showToast('Idea updated successfully!');
             } else {
                 ideas.unshift(ideaData);
-                showToast('New idea evaluated and saved!');
+                document.getElementById('wizardIdeaId').value = ideaData.id;
+            }
+            saveToStorage();
+            renderIdeas();
+            showToast(`Draft saved! (${ideaData.completionPct}% complete)`);
+        }
+
+        function finalizeIdea(e) {
+            e.preventDefault();
+            const { ideaData, existingIndex } = collectWizardFormData();
+
+            if (existingIndex > -1) {
+                ideas[existingIndex] = ideaData;
+                showToast('Idea evaluation saved!');
+            } else {
+                ideas.unshift(ideaData);
+                showToast('New concept evaluated & saved!');
             }
 
             saveToStorage();
-            closeModal();
+            closeWizard();
             renderIdeas();
+
+            if (ideaData.completionPct >= 90) {
+                openReportModal(ideaData.id);
+            }
         }
 
+        // --- Executive Report & PDF Generation Modal ---
+        function openReportModal(id) {
+            const idea = ideas.find(i => String(i.id) === String(id));
+            if (!idea) return;
+
+            const modal = document.getElementById('reportModal');
+            const container = document.getElementById('reportContent');
+
+            let highStrengths = [];
+            let warnings = [];
+            
+            factorDefinitions.forEach(f => {
+                const score = (idea.scores && idea.scores[f.id] !== undefined) ? idea.scores[f.id] : 5;
+                if (score >= 8) highStrengths.push({ ...f, score });
+                if (score <= 4) warnings.push({ ...f, score });
+            });
+
+            // Automated heuristic risk warning combos
+            let heuristicAlerts = [];
+            const sc = idea.scores || {};
+            if ((sc.cac || 5) <= 4 && (sc.pricingPotential || 5) <= 4) {
+                heuristicAlerts.push({
+                    type: 'danger',
+                    title: 'Unit Economics Red Flag',
+                    desc: 'High customer acquisition friction combined with low pricing potential creates high risk of burning cash before achieving profitability.'
+                });
+            }
+            if ((sc.speedToMarket || 5) <= 4 && (sc.upfrontInvestment || 5) <= 4) {
+                heuristicAlerts.push({
+                    type: 'warning',
+                    title: 'Capital & Execution Headwind',
+                    desc: 'Slow time-to-market coupled with high upfront capital demands. Consider de-risking with a lightweight concierge MVP first.'
+                });
+            }
+            if ((sc.uniqueness || 5) <= 4 && (sc.urgency || 5) <= 4) {
+                heuristicAlerts.push({
+                    type: 'danger',
+                    title: 'Commodity & Low-Demand Hazard',
+                    desc: 'Low uniqueness and low customer urgency will make distribution and conversion an uphill battle.'
+                });
+            }
+            if ((sc.urgency || 5) >= 8 && (sc.speedToMarket || 5) >= 8) {
+                heuristicAlerts.push({
+                    type: 'success',
+                    title: 'Rapid MVP Opportunity',
+                    desc: 'Urgent customer demand combined with fast build velocity. Strong signal to launch a smoke test immediately.'
+                });
+            }
+
+            let verdict = 'High Risk / Re-evaluate';
+            let verdictClass = 'bg-rose-500/10 text-rose-400 border-rose-500/20';
+            if (idea.totalScore >= 75) {
+                verdict = 'High Potential / Full Speed Ahead';
+                verdictClass = 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20';
+            } else if (idea.totalScore >= 50) {
+                verdict = 'Marginal / Proceed with Caution';
+                verdictClass = 'bg-amber-500/10 text-amber-400 border-amber-500/20';
+            }
+
+            container.innerHTML = `
+                <!-- Executive Header Card -->
+                <div class="bg-slate-950 border border-slate-800 rounded-2xl p-6 print-card">
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-4 pb-4 border-b border-slate-800">
+                        <div>
+                            <span class="text-xs font-bold text-blue-400 uppercase tracking-wider bg-blue-500/10 px-2.5 py-1 rounded-md border border-blue-500/20">${escapeHtml(idea.category || 'Venture Concept')}</span>
+                            <h1 class="text-2xl font-bold text-white mt-2 print-text-dark">${escapeHtml(idea.title)}</h1>
+                            ${idea.tagline ? `<p class="text-xs text-slate-300 mt-1 print-text-muted italic">${escapeHtml(idea.tagline)}</p>` : ''}
+                        </div>
+                        <div class="text-right shrink-0">
+                            <div class="text-3xl font-extrabold text-white print-text-dark">${idea.totalScore}<span class="text-sm font-normal text-slate-400 print-text-muted">/100</span></div>
+                            <span class="inline-block mt-1 text-xs font-bold px-2.5 py-1 rounded-full border ${verdictClass}">${verdict}</span>
+                        </div>
+                    </div>
+
+                    <!-- Core Thesis Grid -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
+                        <div class="bg-slate-900/80 p-3.5 rounded-xl border border-slate-800/80 print-card">
+                            <strong class="text-slate-400 block mb-1 uppercase font-semibold text-[10px] tracking-wider">Target Customer (ICP)</strong>
+                            <p class="text-slate-200 print-text-dark">${escapeHtml(idea.targetAudience || 'Not specified')}</p>
+                        </div>
+                        <div class="bg-slate-900/80 p-3.5 rounded-xl border border-slate-800/80 print-card">
+                            <strong class="text-slate-400 block mb-1 uppercase font-semibold text-[10px] tracking-wider">Acute Pain / Problem</strong>
+                            <p class="text-slate-200 print-text-dark">${escapeHtml(idea.problem || 'Not specified')}</p>
+                        </div>
+                        <div class="bg-slate-900/80 p-3.5 rounded-xl border border-slate-800/80 print-card">
+                            <strong class="text-slate-400 block mb-1 uppercase font-semibold text-[10px] tracking-wider">Proposed Solution</strong>
+                            <p class="text-slate-200 print-text-dark">${escapeHtml(idea.solution || 'Not specified')}</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Visual Radar Analytics & Heuristic Diagnostics -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
+                    <!-- Radar Footprint Chart -->
+                    <div class="bg-slate-950 border border-slate-800 rounded-2xl p-5 flex flex-col items-center justify-center print-card min-h-[340px]">
+                        <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-3 text-center">10-Pillar Viability Radar</h3>
+                        <div class="w-full max-w-[320px] aspect-square">
+                            <canvas id="reportRadarCanvas"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Heuristic Diagnostics & Alerts -->
+                    <div class="space-y-3">
+                        <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400">Automated Heuristic Diagnostics</h3>
+                        
+                        ${heuristicAlerts.length > 0 ? heuristicAlerts.map(h => `
+                            <div class="p-3.5 rounded-xl border text-xs leading-relaxed ${
+                                h.type === 'danger' ? 'bg-rose-500/10 border-rose-500/30 text-rose-300' :
+                                h.type === 'warning' ? 'bg-amber-500/10 border-amber-500/30 text-amber-300' :
+                                'bg-emerald-500/10 border-emerald-500/30 text-emerald-300'
+                            }">
+                                <strong class="font-bold block mb-0.5">${h.type === 'danger' ? '🚨' : h.type === 'warning' ? '⚠️' : '🚀'} ${h.title}</strong>
+                                <span>${h.desc}</span>
+                            </div>
+                        `).join('') : `
+                            <div class="p-3.5 rounded-xl border border-slate-800 bg-slate-950 text-xs text-slate-400">
+                                Balanced score profile across all 10 viability dimensions.
+                            </div>
+                        `}
+
+                        <!-- Key Pillars Breakdown Highlights -->
+                        <div class="bg-slate-950 border border-slate-800 rounded-xl p-3.5 space-y-2 print-card">
+                            <strong class="text-xs font-semibold text-white block print-text-dark">Key Strengths & Weaknesses</strong>
+                            <div class="text-xs space-y-1">
+                                <p class="text-emerald-400 flex items-center gap-1.5 font-medium">
+                                    <span>Top Strengths:</span>
+                                    <span class="text-slate-300 font-normal print-text-muted">${highStrengths.length > 0 ? highStrengths.map(s => `${s.name} (${s.score}/10)`).join(', ') : 'None above 8/10'}</span>
+                                </p>
+                                <p class="text-rose-400 flex items-center gap-1.5 font-medium">
+                                    <span>Bottlenecks / Headwinds:</span>
+                                    <span class="text-slate-300 font-normal print-text-muted">${warnings.length > 0 ? warnings.map(w => `${w.name} (${w.score}/10)`).join(', ') : 'None below 4/10'}</span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pre-Launch Action Blueprint -->
+                <div class="bg-slate-950 border border-slate-800 rounded-2xl p-5 print-card">
+                    <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-3">Pre-Launch Validation Blueprint</h3>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+                        <div class="bg-slate-900/90 p-3.5 rounded-xl border border-slate-800 print-card">
+                            <strong class="text-amber-400 block mb-1 font-semibold flex items-center gap-1.5">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                                #1 Riskiest Assumption to Test
+                            </strong>
+                            <p class="text-slate-300 print-text-dark leading-relaxed">${escapeHtml(idea.riskiestAssumption || 'Not documented yet.')}</p>
+                        </div>
+                        <div class="bg-slate-900/90 p-3.5 rounded-xl border border-slate-800 print-card">
+                            <strong class="text-blue-400 block mb-1 font-semibold flex items-center gap-1.5">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                                Recommended Next Smoke Test
+                            </strong>
+                            <p class="text-slate-300 print-text-dark leading-relaxed">${escapeHtml(idea.nextExperiment || 'Run problem-validation interviews with 10 target buyers.')}</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Complete 10 Factors & Research Notes Table -->
+                <div class="bg-slate-950 border border-slate-800 rounded-2xl p-5 print-card">
+                    <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-3">Factor-by-Factor Evidence & Research Logs</h3>
+                    <div class="space-y-3">
+                        ${factorDefinitions.map(f => {
+                            const score = (idea.scores && idea.scores[f.id] !== undefined) ? idea.scores[f.id] : 5;
+                            const note = (idea.notes && idea.notes[f.id]) ? idea.notes[f.id] : '';
+                            const scoreColor = score >= 8 ? 'text-emerald-400 bg-emerald-500/10 border-emerald-500/20' : score >= 5 ? 'text-blue-400 bg-blue-500/10 border-blue-500/20' : 'text-rose-400 bg-rose-500/10 border-rose-500/20';
+                            return `
+                                <div class="bg-slate-900/60 border border-slate-800/80 rounded-xl p-3 flex flex-col sm:flex-row justify-between gap-2.5 print-card text-xs">
+                                    <div class="space-y-0.5 flex-1">
+                                        <div class="flex items-center gap-2">
+                                            <span class="font-bold text-slate-200 print-text-dark">${f.number}. ${f.name}</span>
+                                            <span class="px-2 py-0.5 rounded font-bold border text-[11px] ${scoreColor}">${score}/10</span>
+                                        </div>
+                                        <p class="text-[11px] text-slate-400 print-text-muted">${f.prompt}</p>
+                                        ${note ? `<p class="text-xs text-slate-200 print-text-dark bg-slate-950/80 border border-slate-800 rounded-md p-2 mt-1.5"><span class="text-slate-400 font-semibold text-[10px] block">RESEARCH LOG:</span>${escapeHtml(note)}</p>` : '<p class="text-[11px] text-slate-500 italic mt-1">No research notes logged.</p>'}
+                                    </div>
+                                </div>
+                            `;
+                        }).join('')}
+                    </div>
+                </div>
+
+                <div class="text-center text-[11px] text-slate-500 pt-3 border-t border-slate-800/60 print-text-muted">
+                    Generated via IdeaVault Pro &bull; Confidential Venture Evaluation &bull; ${new Date().toLocaleDateString()}
+                </div>
+            `;
+
+            modal.classList.remove('hidden');
+
+            setTimeout(() => {
+                const canvas = document.getElementById('reportRadarCanvas');
+                if (!canvas) return;
+                
+                if (radarChartInstance) {
+                    radarChartInstance.destroy();
+                }
+
+                const labels = factorDefinitions.map(f => f.name.split('&')[0].trim());
+                const dataValues = factorDefinitions.map(f => (idea.scores && idea.scores[f.id] !== undefined) ? idea.scores[f.id] : 5);
+
+                radarChartInstance = new Chart(canvas, {
+                    type: 'radar',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: idea.title,
+                            data: dataValues,
+                            backgroundColor: 'rgba(59, 130, 246, 0.25)',
+                            borderColor: 'rgba(96, 165, 250, 1)',
+                            borderWidth: 2,
+                            pointBackgroundColor: 'rgba(96, 165, 250, 1)',
+                            pointBorderColor: '#fff',
+                            pointHoverBackgroundColor: '#fff',
+                            pointHoverBorderColor: 'rgba(96, 165, 250, 1)'
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: true,
+                        animation: false,
+                        scales: {
+                            r: {
+                                min: 0,
+                                max: 10,
+                                ticks: {
+                                    stepSize: 2,
+                                    display: false,
+                                    backdropColor: 'transparent'
+                                },
+                                grid: {
+                                    color: 'rgba(255, 255, 255, 0.08)'
+                                },
+                                angleLines: {
+                                    color: 'rgba(255, 255, 255, 0.08)'
+                                },
+                                pointLabels: {
+                                    color: '#94a3b8',
+                                    font: {
+                                        size: 9,
+                                        family: 'Plus Jakarta Sans'
+                                    }
+                                }
+                            }
+                        },
+                        plugins: {
+                            legend: {
+                                display: false
+                            }
+                        }
+                    }
+                });
+            }, 50);
+        }
+
+        function closeReportModal() {
+            document.getElementById('reportModal').classList.add('hidden');
+        }
+
+        // --- Idea CRUD & Duplication ---
         let pendingDeleteId = null;
 
         function promptDeleteIdea(id) {
             if (!id && id !== 0) return;
             pendingDeleteId = String(id);
             const idea = ideas.find(i => String(i.id) === pendingDeleteId);
-            const title = idea ? idea.title : 'this idea';
+            const title = idea ? idea.title : 'this concept';
 
             const titleEl = document.getElementById('deleteIdeaTitle');
             if (titleEl) titleEl.innerText = `"${title}"`;
@@ -580,11 +1410,7 @@
             saveToStorage();
             closeDeleteModal();
             renderIdeas();
-            showToast('Idea moved to graveyard.');
-        }
-
-        function deleteIdea(id) {
-            promptDeleteIdea(id);
+            showToast('Idea removed.');
         }
 
         function duplicateIdea(id) {
@@ -603,22 +1429,24 @@
             ideas.unshift(newIdea);
             saveToStorage();
             renderIdeas();
-            showToast('Idea duplicated!');
+            showToast('Concept duplicated!');
         }
 
         function saveToStorage() {
+            localStorage.setItem('ideavault_pro_ideas', JSON.stringify(ideas));
             localStorage.setItem('pwa_ideas', JSON.stringify(ideas));
         }
 
-        // Export ideas as JSON file
+        // --- Export & Import JSON ---
         function exportJSON() {
             if (ideas.length === 0) {
-                showToast('No ideas to export yet.');
+                showToast('No ideas to export.');
                 return;
             }
 
             const exportPayload = {
-                app: 'IdeaVault - Personal MBA 10-Factor Evaluator',
+                app: 'IdeaVault Pro — Venture Evaluation Platform',
+                version: '2.0',
                 exportedAt: new Date().toISOString(),
                 totalCount: ideas.length,
                 ideas: ideas
@@ -628,14 +1456,13 @@
             const downloadAnchor = document.createElement('a');
             const dateTag = new Date().toISOString().slice(0, 10);
             downloadAnchor.setAttribute("href", dataStr);
-            downloadAnchor.setAttribute("download", `ideavault-export-${dateTag}.json`);
+            downloadAnchor.setAttribute("download", `ideavault-pro-backup-${dateTag}.json`);
             document.body.appendChild(downloadAnchor);
             downloadAnchor.click();
             downloadAnchor.remove();
             showToast(`Exported ${ideas.length} ideas to JSON!`);
         }
 
-        // Import ideas from JSON file
         function importJSON(event) {
             const file = event.target.files[0];
             if (!file) return;
@@ -651,10 +1478,9 @@
                     } else if (parsed && Array.isArray(parsed.ideas)) {
                         importedList = parsed.ideas;
                     } else {
-                        throw new Error('Unrecognized JSON structure');
+                        throw new Error('Unrecognized format');
                     }
 
-                    // Validate & normalize items
                     let addedCount = 0;
                     importedList.forEach(item => {
                         if (!item.title) return;
@@ -669,15 +1495,24 @@
                         const normalized = {
                             id: validId,
                             title: item.title,
-                            description: item.description || '',
+                            category: item.category || 'B2B SaaS',
+                            tagline: item.tagline || '',
+                            targetAudience: item.targetAudience || '',
+                            problem: item.problem || item.description || '',
+                            solution: item.solution || '',
+                            riskiestAssumption: item.riskiestAssumption || '',
+                            nextExperiment: item.nextExperiment || '',
                             scores: scores,
+                            notes: item.notes || {},
                             totalScore: item.totalScore || total,
                             createdAt: item.createdAt || Date.now(),
                             date: item.date || new Date().toLocaleDateString(),
                             updatedAt: item.updatedAt || Date.now()
                         };
 
-                        const existingIdx = ideas.findIndex(i => i.id === normalized.id);
+                        normalized.completionPct = computeIdeaCompletion(normalized);
+
+                        const existingIdx = ideas.findIndex(i => String(i.id) === String(normalized.id));
                         if (existingIdx > -1) {
                             ideas[existingIdx] = normalized;
                         } else {
@@ -688,11 +1523,11 @@
 
                     saveToStorage();
                     renderIdeas();
-                    showToast(`Successfully imported ${addedCount} ideas!`);
+                    showToast(`Successfully imported ${addedCount} concepts!`);
                 } catch (err) {
                     alert('Invalid JSON file format. Please provide a valid IdeaVault JSON backup.');
                 }
-                event.target.value = ''; // Reset input
+                event.target.value = '';
             };
             reader.readAsText(file);
         }
@@ -706,21 +1541,47 @@
             }, 3000);
         }
 
+        // --- Filtering & Rendering Grid ---
+        function setFilter(filter) {
+            currentFilter = filter;
+            updateFilterTabsUI();
+            renderIdeas();
+        }
+
+        function updateFilterTabsUI() {
+            const tabs = ['all', 'completed', 'drafts', 'promising', 'marginal', 'kill'];
+            tabs.forEach(t => {
+                const btn = document.getElementById(`tab_${t}`);
+                if (!btn) return;
+                if (currentFilter === t) {
+                    btn.className = 'whitespace-nowrap shrink-0 px-3 py-1.5 rounded-lg text-xs font-semibold transition flex items-center gap-1.5 bg-slate-800 text-white shadow-sm border border-slate-700';
+                } else {
+                    btn.className = 'whitespace-nowrap shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium transition flex items-center gap-1.5 text-slate-400 hover:text-slate-200 hover:bg-slate-900 border border-transparent';
+                }
+            });
+        }
+
         function getSortedAndFilteredIdeas() {
             const search = (document.getElementById('searchInput')?.value || '').toLowerCase().trim();
             const sortBy = document.getElementById('sortBy')?.value || 'score_desc';
 
             let filtered = ideas.filter(idea => {
-                // Filter tabs
-                if (currentFilter === 'promising' && (idea.totalScore || 0) <= 75) return false;
-                if (currentFilter === 'marginal' && ((idea.totalScore || 0) <= 50 || (idea.totalScore || 0) > 75)) return false;
-                if (currentFilter === 'kill' && (idea.totalScore || 0) > 50) return false;
+                const totalScore = idea.totalScore || 0;
+                const completionPct = idea.completionPct !== undefined ? idea.completionPct : computeIdeaCompletion(idea);
 
-                // Search query
+                if (currentFilter === 'completed' && completionPct < 90) return false;
+                if (currentFilter === 'drafts' && completionPct >= 90) return false;
+                if (currentFilter === 'promising' && totalScore < 75) return false;
+                if (currentFilter === 'marginal' && (totalScore < 50 || totalScore >= 75)) return false;
+                if (currentFilter === 'kill' && totalScore >= 50) return false;
+
                 if (search) {
                     const matchTitle = (idea.title || '').toLowerCase().includes(search);
-                    const matchDesc = (idea.description || '').toLowerCase().includes(search);
-                    if (!matchTitle && !matchDesc) return false;
+                    const matchCat = (idea.category || '').toLowerCase().includes(search);
+                    const matchProblem = (idea.problem || '').toLowerCase().includes(search);
+                    const matchSolution = (idea.solution || '').toLowerCase().includes(search);
+                    const matchTagline = (idea.tagline || '').toLowerCase().includes(search);
+                    if (!matchTitle && !matchCat && !matchProblem && !matchSolution && !matchTagline) return false;
                 }
                 return true;
             });
@@ -731,14 +1592,14 @@
                         return (b.totalScore || 0) - (a.totalScore || 0);
                     case 'score_asc':
                         return (a.totalScore || 0) - (b.totalScore || 0);
+                    case 'progress_desc':
+                        return (b.completionPct || 0) - (a.completionPct || 0);
                     case 'date_desc':
                         return (b.createdAt || 0) - (a.createdAt || 0);
                     case 'date_asc':
                         return (a.createdAt || 0) - (b.createdAt || 0);
                     case 'title_asc':
                         return (a.title || '').localeCompare(b.title || '');
-                    case 'title_desc':
-                        return (b.title || '').localeCompare(a.title || '');
                     default:
                         return 0;
                 }
@@ -749,11 +1610,15 @@
 
         function updateStats() {
             const total = ideas.length;
-            const promising = ideas.filter(i => (i.totalScore || 0) > 75).length;
-            const marginal = ideas.filter(i => (i.totalScore || 0) > 50 && (i.totalScore || 0) <= 75).length;
-            const kill = ideas.filter(i => (i.totalScore || 0) <= 50).length;
+            const completed = ideas.filter(i => (i.completionPct || computeIdeaCompletion(i)) >= 90).length;
+            const drafts = ideas.filter(i => (i.completionPct || computeIdeaCompletion(i)) < 90).length;
+            const promising = ideas.filter(i => (i.totalScore || 0) >= 75).length;
+            const marginal = ideas.filter(i => (i.totalScore || 0) >= 50 && (i.totalScore || 0) < 75).length;
+            const kill = ideas.filter(i => (i.totalScore || 0) < 50).length;
 
             document.getElementById('statTotal').innerText = total;
+            document.getElementById('statCompleted').innerText = completed;
+            document.getElementById('statDrafts').innerText = drafts;
             document.getElementById('statPromising').innerText = promising;
             document.getElementById('statMarginal').innerText = marginal;
             document.getElementById('statKill').innerText = kill;
@@ -768,91 +1633,112 @@
             const displayList = getSortedAndFilteredIdeas();
             grid.innerHTML = '';
 
-            // Show empty search state if search yields no results
             if (displayList.length === 0 && ideas.length > 0) {
                 emptyState.classList.remove('hidden');
-                document.getElementById('emptyStateTitle').innerText = 'No matching ideas';
-                document.getElementById('emptyStateSubtitle').innerText = 'Try selecting "All" or clearing your search filters.';
+                document.getElementById('emptyStateTitle').innerText = 'No matching concepts';
+                document.getElementById('emptyStateSubtitle').innerText = 'Try selecting "All Concepts" or clearing your search filter.';
             } else {
                 emptyState.classList.add('hidden');
             }
 
             displayList.forEach(idea => {
+                const completionPct = idea.completionPct !== undefined ? idea.completionPct : computeIdeaCompletion(idea);
+                const isComplete = completionPct >= 90;
+
                 let badgeColor = 'bg-rose-500/10 text-rose-400 border-rose-500/20';
                 let dotColor = 'bg-rose-400';
-                let verdict = 'Kill';
-                let verdictColor = 'text-rose-400';
+                let verdict = 'High Risk';
 
-                if (idea.totalScore > 75) {
+                if (idea.totalScore >= 75) {
                     badgeColor = 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20';
                     dotColor = 'bg-emerald-400';
-                    verdict = 'Full Speed';
-                    verdictColor = 'text-emerald-400';
-                } else if (idea.totalScore > 50) {
+                    verdict = 'High Potential';
+                } else if (idea.totalScore >= 50) {
                     badgeColor = 'bg-amber-500/10 text-amber-400 border-amber-500/20';
                     dotColor = 'bg-amber-400';
                     verdict = 'Marginal';
-                    verdictColor = 'text-amber-400';
                 }
 
-                // Mini score breakdown tags (top 3 highest factors)
-                let factorPills = '';
+                let topPills = '';
                 if (idea.scores) {
                     const topFactors = factorDefinitions
-                        .map(f => ({ name: f.name, score: idea.scores[f.id] || 0 }))
+                        .map(f => ({ name: f.name.split('&')[0].trim(), score: idea.scores[f.id] || 0 }))
                         .sort((a, b) => b.score - a.score)
                         .slice(0, 3);
 
-                    factorPills = topFactors.map(tf => `
-                        <span class="inline-flex items-center gap-1 text-[10px] bg-slate-800/80 text-slate-300 px-2 py-0.5 rounded-md border border-slate-700/50">
+                    topPills = topFactors.map(tf => `
+                        <span class="inline-flex items-center gap-1 text-[10px] bg-slate-950/80 text-slate-300 px-2 py-0.5 rounded-md border border-slate-800">
                             ${tf.name}: <strong class="text-white">${tf.score}/10</strong>
                         </span>
                     `).join('');
                 }
 
                 const card = document.createElement('div');
-                card.className = 'bg-slate-900/70 border border-slate-800/90 rounded-2xl p-5 flex flex-col justify-between hover:border-slate-700 hover:bg-slate-900/90 transition shadow-sm';
+                card.className = 'bg-slate-900/80 border border-slate-800/90 rounded-2xl p-5 flex flex-col justify-between hover:border-slate-700 hover:bg-slate-900 transition shadow-sm relative group';
                 card.innerHTML = `
                     <div>
+                        <!-- Card Header & Badge -->
                         <div class="flex justify-between items-start gap-3 mb-2">
-                            <h3 class="font-semibold text-white text-base leading-snug">${escapeHtml(idea.title)}</h3>
-                            <span class="px-2.5 py-1 rounded-full text-xs font-bold border shrink-0 ${badgeColor}">${idea.totalScore}/100</span>
-                        </div>
-                        <p class="text-xs text-slate-400 mb-3 line-clamp-3 leading-relaxed">${escapeHtml(idea.description || 'No additional notes provided.')}</p>
-                        
-                        <div class="flex items-center gap-1.5 mb-3 text-xs font-medium ${verdictColor}">
-                            <span class="w-2 h-2 rounded-full ${dotColor}"></span>
-                            <span>${verdict}</span>
+                            <div>
+                                <span class="inline-block text-[10px] font-bold uppercase tracking-wider text-blue-400 bg-blue-500/10 px-2 py-0.5 rounded-md border border-blue-500/20 mb-1.5">${escapeHtml(idea.category || 'B2B SaaS')}</span>
+                                <h3 class="font-bold text-white text-base leading-snug cursor-pointer hover:text-blue-400 transition" onclick="openWizard('${escapeHtml(String(idea.id))}')">${escapeHtml(idea.title)}</h3>
+                            </div>
+                            <span class="px-2.5 py-1 rounded-full text-xs font-extrabold border shrink-0 ${badgeColor}">${idea.totalScore}/100</span>
                         </div>
 
-                        ${factorPills ? `<div class="flex flex-wrap gap-1.5 mb-4">${factorPills}</div>` : ''}
+                        ${idea.tagline ? `<p class="text-xs text-slate-400 mb-2 italic line-clamp-1">${escapeHtml(idea.tagline)}</p>` : ''}
+                        
+                        <p class="text-xs text-slate-300 mb-3 line-clamp-2 leading-relaxed">${escapeHtml(idea.problem || idea.solution || 'No detailed thesis notes recorded yet.')}</p>
+
+                        <!-- Progress Bar & Status -->
+                        <div class="mb-3.5 bg-slate-950/90 p-2.5 rounded-xl border border-slate-800/80 space-y-1.5">
+                            <div class="flex justify-between items-center text-[11px]">
+                                <span class="flex items-center gap-1.5 font-medium ${isComplete ? 'text-emerald-400' : 'text-purple-400'}">
+                                    <span class="w-1.5 h-1.5 rounded-full ${isComplete ? 'bg-emerald-400' : 'bg-purple-400 animate-pulse'}"></span>
+                                    ${isComplete ? '100% Evaluated' : `Draft (${completionPct}% complete)`}
+                                </span>
+                                <span class="flex items-center gap-1 font-medium text-slate-400">
+                                    <span class="w-2 h-2 rounded-full ${dotColor}"></span>
+                                    ${verdict}
+                                </span>
+                            </div>
+                            <div class="w-full bg-slate-800 h-1.5 rounded-full overflow-hidden">
+                                <div class="${isComplete ? 'bg-emerald-500' : 'bg-purple-500'} h-full transition-all duration-300" style="width: ${completionPct}%"></div>
+                            </div>
+                        </div>
+
+                        ${topPills ? `<div class="flex flex-wrap gap-1.5 mb-4">${topPills}</div>` : ''}
                     </div>
 
-                    <div class="flex justify-between items-center pt-3 border-t border-slate-800/80 text-xs text-slate-500">
-                        <span>Added: ${idea.date || 'Recent'}</span>
-                        <div class="flex items-center gap-3">
-                            <button onclick="duplicateIdea('${escapeHtml(String(idea.id))}')" title="Duplicate Idea" class="hover:text-slate-300 transition">Copy</button>
-                            <button onclick="openModal('${escapeHtml(String(idea.id))}')" title="Edit Scores" class="hover:text-blue-400 transition font-medium">Edit</button>
-                            <button onclick="deleteIdea('${escapeHtml(String(idea.id))}')" title="Delete Idea" class="hover:text-rose-400 transition font-medium">Trash</button>
+                    <!-- Card Actions -->
+                    <div class="flex flex-wrap justify-between items-center pt-3 border-t border-slate-800/80 text-xs text-slate-400 gap-2">
+                        <span class="text-[11px] text-slate-500">${idea.date || 'Recent'}</span>
+                        <div class="flex items-center gap-2">
+                            <button onclick="openReportModal('${escapeHtml(String(idea.id))}')" 
+                                class="bg-blue-600/15 hover:bg-blue-600 text-blue-400 hover:text-white border border-blue-500/30 px-2.5 py-1 rounded-lg text-xs font-semibold transition flex items-center gap-1">
+                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                                View Report
+                            </button>
+                            <button onclick="openWizard('${escapeHtml(String(idea.id))}')" title="Edit Concept" class="hover:text-white bg-slate-800 hover:bg-slate-700 px-2.5 py-1 rounded-lg border border-slate-700 transition font-medium">Edit</button>
+                            <button onclick="duplicateIdea('${escapeHtml(String(idea.id))}')" title="Duplicate Concept" class="hover:text-slate-300 p-1 transition">&squf;&squf;</button>
+                            <button onclick="promptDeleteIdea('${escapeHtml(String(idea.id))}')" title="Delete Concept" class="hover:text-rose-400 p-1 transition">&times;</button>
                         </div>
                     </div>
                 `;
                 grid.appendChild(card);
             });
 
-            // Always append a placeholder card at the end of the grid
             const placeholderCard = document.createElement('div');
-            placeholderCard.onclick = () => openModal();
-            placeholderCard.className = 'bg-slate-900/30 border-2 border-dashed border-slate-800/90 hover:border-blue-500/50 hover:bg-slate-900/60 rounded-2xl p-6 flex flex-col items-center justify-center text-center transition cursor-pointer group min-h-[200px] shadow-sm';
+            placeholderCard.onclick = () => openWizard();
+            placeholderCard.className = 'bg-slate-900/30 border-2 border-dashed border-slate-800/90 hover:border-blue-500/50 hover:bg-slate-900/60 rounded-2xl p-6 flex flex-col items-center justify-center text-center transition cursor-pointer group min-h-[220px] shadow-sm';
             placeholderCard.innerHTML = `
                 <div class="w-12 h-12 rounded-2xl bg-blue-500/10 text-blue-400 group-hover:bg-blue-600 group-hover:text-white flex items-center justify-center mb-3 transition shadow-sm">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
                 </div>
-                <h3 class="font-semibold text-white text-sm mb-1 group-hover:text-blue-400 transition">Evaluate New Idea</h3>
-                <p class="text-xs text-slate-500 max-w-xs leading-relaxed mb-3">Score your next concept against the 10 Personal MBA market factors</p>
-                <span class="inline-flex items-center gap-1.5 text-xs font-medium text-blue-400 bg-blue-500/10 px-3 py-1.5 rounded-xl border border-blue-500/20 group-hover:bg-blue-600 group-hover:text-white transition">
-                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
-                    New Evaluation
+                <h3 class="font-bold text-white text-sm mb-1 group-hover:text-blue-400 transition">Evaluate New Concept</h3>
+                <p class="text-xs text-slate-400 max-w-xs leading-relaxed mb-3">Guided 4-step wizard with plain-English viability scoring & research logs</p>
+                <span class="inline-flex items-center gap-1.5 text-xs font-semibold text-blue-400 bg-blue-500/10 px-3.5 py-1.5 rounded-xl border border-blue-500/20 group-hover:bg-blue-600 group-hover:text-white transition">
+                    Start Evaluation &rarr;
                 </span>
             `;
             grid.appendChild(placeholderCard);
@@ -863,7 +1749,6 @@
             return String(str).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
         }
 
-        // Initialize display
         renderIdeas();
     </script>
 </body>
