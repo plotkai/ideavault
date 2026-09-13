@@ -240,69 +240,34 @@
             </div>
         </header>
 
-        <!-- Sticky Filter & Search Toolbar -->
+        <!-- Sticky Search & Sorting Toolbar -->
         <section id="toolbar" class="sticky top-3 z-30 mb-6 bg-slate-900/90 backdrop-blur-md border border-slate-800/90 p-3 sm:p-3.5 rounded-2xl shadow-xl shadow-slate-950/60 transition-all">
-            <div class="flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-3">
-                <!-- Filter Pills -->
-                <div class="flex items-center gap-1.5 p-1 bg-slate-950/90 border border-slate-800/80 rounded-xl overflow-x-auto no-scrollbar shrink-0" id="filterTabs">
-                    <button onclick="setFilter('all')" id="tab_all"
-                        class="whitespace-nowrap shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium transition flex items-center gap-1.5 bg-slate-800 text-white shadow-sm border border-slate-700">
-                        <span>All Concepts</span>
-                        <span id="statTotal" class="text-[11px] px-1.5 py-0.2 rounded-full bg-slate-700 text-slate-200 font-semibold">0</span>
-                    </button>
-                    <button onclick="setFilter('completed')" id="tab_completed"
-                        class="whitespace-nowrap shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium transition flex items-center gap-1.5 text-slate-400 hover:text-slate-200 hover:bg-slate-900 border border-transparent">
-                        <span class="w-2 h-2 rounded-full bg-blue-400"></span>
-                        <span>100% Evaluated</span>
-                        <span id="statCompleted" class="text-[11px] px-1.5 py-0.2 rounded-full bg-blue-500/15 text-blue-400 font-semibold">0</span>
-                    </button>
-                    <button onclick="setFilter('drafts')" id="tab_drafts"
-                        class="whitespace-nowrap shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium transition flex items-center gap-1.5 text-slate-400 hover:text-slate-200 hover:bg-slate-900 border border-transparent">
-                        <span class="w-2 h-2 rounded-full bg-purple-400"></span>
-                        <span>Drafts / In Progress</span>
-                        <span id="statDrafts" class="text-[11px] px-1.5 py-0.2 rounded-full bg-purple-500/15 text-purple-400 font-semibold">0</span>
-                    </button>
-                    <button onclick="setFilter('promising')" id="tab_promising"
-                        class="whitespace-nowrap shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium transition flex items-center gap-1.5 text-slate-400 hover:text-slate-200 hover:bg-slate-900 border border-transparent">
-                        <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
-                        <span>High Potential (75+)</span>
-                        <span id="statPromising" class="text-[11px] px-1.5 py-0.2 rounded-full bg-emerald-500/15 text-emerald-400 font-semibold">0</span>
-                    </button>
-                    <button onclick="setFilter('marginal')" id="tab_marginal"
-                        class="whitespace-nowrap shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium transition flex items-center gap-1.5 text-slate-400 hover:text-slate-200 hover:bg-slate-900 border border-transparent">
-                        <span class="w-2 h-2 rounded-full bg-amber-400"></span>
-                        <span>Marginal (50-74)</span>
-                        <span id="statMarginal" class="text-[11px] px-1.5 py-0.2 rounded-full bg-amber-500/15 text-amber-400 font-semibold">0</span>
-                    </button>
-                    <button onclick="setFilter('kill')" id="tab_kill"
-                        class="whitespace-nowrap shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium transition flex items-center gap-1.5 text-slate-400 hover:text-slate-200 hover:bg-slate-900 border border-transparent">
-                        <span class="w-2 h-2 rounded-full bg-rose-400"></span>
-                        <span>High Risk (&le;50)</span>
-                        <span id="statKill" class="text-[11px] px-1.5 py-0.2 rounded-full bg-rose-500/15 text-rose-400 font-semibold">0</span>
-                    </button>
+            <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
+                <!-- Search Input -->
+                <div class="relative flex-1">
+                    <svg class="w-4 h-4 text-slate-500 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                    </svg>
+                    <input type="text" id="searchInput" oninput="renderIdeas()" placeholder="Search by title, category, problem..."
+                        class="w-full bg-slate-950 border border-slate-800 rounded-xl pl-10 pr-4 py-2 text-xs sm:text-sm text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 transition">
                 </div>
 
-                <!-- Search & Sort Controls -->
-                <div class="flex items-center gap-2 flex-1 lg:max-w-md lg:justify-end">
-                    <div class="relative flex-1 min-w-[140px]">
-                        <svg class="w-3.5 h-3.5 text-slate-500 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-                        </svg>
-                        <input type="text" id="searchInput" oninput="renderIdeas()" placeholder="Search title, problem, category..."
-                            class="w-full bg-slate-950 border border-slate-800 rounded-xl pl-8 pr-3 py-1.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 transition">
-                    </div>
-
-                    <div class="relative shrink-0">
+                <!-- Multiple Sorting Options -->
+                <div class="flex items-center gap-2 shrink-0">
+                    <span class="text-xs text-slate-400 hidden sm:inline font-medium">Sort:</span>
+                    <div class="relative w-full sm:w-auto">
                         <select id="sortBy" onchange="renderIdeas()"
-                            class="bg-slate-950 border border-slate-800 text-slate-300 text-xs rounded-xl pl-3 pr-8 py-1.5 focus:outline-none focus:border-blue-500 transition cursor-pointer appearance-none">
-                            <option value="score_desc">Score: High &rarr; Low</option>
-                            <option value="score_asc">Score: Low &rarr; High</option>
+                            class="w-full sm:w-auto bg-slate-950 border border-slate-800 text-slate-200 text-xs sm:text-sm rounded-xl pl-3.5 pr-9 py-2 focus:outline-none focus:border-blue-500 transition cursor-pointer appearance-none font-medium">
+                            <option value="score_desc">Score: Highest First (100 &rarr; 0)</option>
+                            <option value="score_asc">Score: Lowest First (0 &rarr; 100)</option>
                             <option value="progress_desc">Progress: Most Complete</option>
-                            <option value="date_desc">Newest First</option>
-                            <option value="date_asc">Oldest First</option>
-                            <option value="title_asc">Title: A &rarr; Z</option>
+                            <option value="progress_asc">Progress: Least Complete (Drafts)</option>
+                            <option value="date_desc">Date: Newest First</option>
+                            <option value="date_asc">Date: Oldest First</option>
+                            <option value="title_asc">Title: Alphabetical (A &rarr; Z)</option>
+                            <option value="title_desc">Title: Alphabetical (Z &rarr; A)</option>
                         </select>
-                        <svg class="w-3.5 h-3.5 text-slate-500 absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg class="w-4 h-4 text-slate-400 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                         </svg>
                     </div>
@@ -745,7 +710,6 @@
 
         const factorKeys = factorDefinitions.map(f => f.id);
         let ideas = JSON.parse(localStorage.getItem('ideavault_pro_ideas') || localStorage.getItem('pwa_ideas') || '[]');
-        let currentFilter = 'all';
         let currentWizardStep = 1;
         let radarChartInstance = null;
 
@@ -1541,40 +1505,12 @@
             }, 3000);
         }
 
-        // --- Filtering & Rendering Grid ---
-        function setFilter(filter) {
-            currentFilter = filter;
-            updateFilterTabsUI();
-            renderIdeas();
-        }
-
-        function updateFilterTabsUI() {
-            const tabs = ['all', 'completed', 'drafts', 'promising', 'marginal', 'kill'];
-            tabs.forEach(t => {
-                const btn = document.getElementById(`tab_${t}`);
-                if (!btn) return;
-                if (currentFilter === t) {
-                    btn.className = 'whitespace-nowrap shrink-0 px-3 py-1.5 rounded-lg text-xs font-semibold transition flex items-center gap-1.5 bg-slate-800 text-white shadow-sm border border-slate-700';
-                } else {
-                    btn.className = 'whitespace-nowrap shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium transition flex items-center gap-1.5 text-slate-400 hover:text-slate-200 hover:bg-slate-900 border border-transparent';
-                }
-            });
-        }
-
+        // --- Search, Sorting & Rendering Grid ---
         function getSortedAndFilteredIdeas() {
             const search = (document.getElementById('searchInput')?.value || '').toLowerCase().trim();
             const sortBy = document.getElementById('sortBy')?.value || 'score_desc';
 
             let filtered = ideas.filter(idea => {
-                const totalScore = idea.totalScore || 0;
-                const completionPct = idea.completionPct !== undefined ? idea.completionPct : computeIdeaCompletion(idea);
-
-                if (currentFilter === 'completed' && completionPct < 90) return false;
-                if (currentFilter === 'drafts' && completionPct >= 90) return false;
-                if (currentFilter === 'promising' && totalScore < 75) return false;
-                if (currentFilter === 'marginal' && (totalScore < 50 || totalScore >= 75)) return false;
-                if (currentFilter === 'kill' && totalScore >= 50) return false;
-
                 if (search) {
                     const matchTitle = (idea.title || '').toLowerCase().includes(search);
                     const matchCat = (idea.category || '').toLowerCase().includes(search);
@@ -1593,13 +1529,17 @@
                     case 'score_asc':
                         return (a.totalScore || 0) - (b.totalScore || 0);
                     case 'progress_desc':
-                        return (b.completionPct || 0) - (a.completionPct || 0);
+                        return (b.completionPct || computeIdeaCompletion(b)) - (a.completionPct || computeIdeaCompletion(a));
+                    case 'progress_asc':
+                        return (a.completionPct || computeIdeaCompletion(a)) - (b.completionPct || computeIdeaCompletion(b));
                     case 'date_desc':
                         return (b.createdAt || 0) - (a.createdAt || 0);
                     case 'date_asc':
                         return (a.createdAt || 0) - (b.createdAt || 0);
                     case 'title_asc':
                         return (a.title || '').localeCompare(b.title || '');
+                    case 'title_desc':
+                        return (b.title || '').localeCompare(a.title || '');
                     default:
                         return 0;
                 }
@@ -1608,27 +1548,9 @@
             return filtered;
         }
 
-        function updateStats() {
-            const total = ideas.length;
-            const completed = ideas.filter(i => (i.completionPct || computeIdeaCompletion(i)) >= 90).length;
-            const drafts = ideas.filter(i => (i.completionPct || computeIdeaCompletion(i)) < 90).length;
-            const promising = ideas.filter(i => (i.totalScore || 0) >= 75).length;
-            const marginal = ideas.filter(i => (i.totalScore || 0) >= 50 && (i.totalScore || 0) < 75).length;
-            const kill = ideas.filter(i => (i.totalScore || 0) < 50).length;
-
-            document.getElementById('statTotal').innerText = total;
-            document.getElementById('statCompleted').innerText = completed;
-            document.getElementById('statDrafts').innerText = drafts;
-            document.getElementById('statPromising').innerText = promising;
-            document.getElementById('statMarginal').innerText = marginal;
-            document.getElementById('statKill').innerText = kill;
-        }
-
         function renderIdeas() {
             const grid = document.getElementById('ideasGrid');
             const emptyState = document.getElementById('emptyState');
-            updateStats();
-            updateFilterTabsUI();
 
             const displayList = getSortedAndFilteredIdeas();
             grid.innerHTML = '';
@@ -1636,7 +1558,7 @@
             if (displayList.length === 0 && ideas.length > 0) {
                 emptyState.classList.remove('hidden');
                 document.getElementById('emptyStateTitle').innerText = 'No matching concepts';
-                document.getElementById('emptyStateSubtitle').innerText = 'Try selecting "All Concepts" or clearing your search filter.';
+                document.getElementById('emptyStateSubtitle').innerText = 'Try clearing your search query.';
             } else {
                 emptyState.classList.add('hidden');
             }
