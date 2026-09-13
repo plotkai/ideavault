@@ -5,9 +5,23 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>IdeaVault Pro — Professional Venture & Idea Evaluation Platform</title>
-    <meta name="description" content="Evaluate, stress-test, and prioritize startup concepts and business ideas with a comprehensive 10-pillar viability framework, research logs, and executive reports.">
-    <link rel="manifest"
-        href="data:application/manifest+json;charset=utf-8,%7B%22name%22%3A%22IdeaVault%20Pro%22%2C%22short_name%22%3A%22IdeaVault%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%23090d16%22%2C%22theme_color%22%3A%22%232563eb%22%7D">
+    <link rel="manifest" href="./manifest.json">
+    
+    <!-- PWA & Homescreen Icons -->
+    <link rel="icon" type="image/svg+xml" href="./icon.svg">
+    <link rel="alternate icon" type="image/svg+xml" href="./favicon.svg">
+    <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="./icon-512.png">
+    <link rel="apple-touch-icon" href="./apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="./apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="192x192" href="./icon-192.png">
+    <link rel="apple-touch-icon" sizes="512x512" href="./icon-512.png">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="IdeaVault Pro">
+    <meta name="application-name" content="IdeaVault Pro">
+    <meta name="theme-color" content="#090d16">
+    <meta name="msapplication-TileColor" content="#090d16">
     
     <!-- Google Fonts: Plus Jakarta Sans -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -1412,7 +1426,7 @@
         }
 
         // --- Export & Import JSON ---
-        function exportJSON() {
+        async function exportJSON() {
             if (ideas.length === 0) {
                 showToast('No ideas to export.');
                 return;
@@ -1426,15 +1440,75 @@
                 ideas: ideas
             };
 
-            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(exportPayload, null, 2));
-            const downloadAnchor = document.createElement('a');
+            const jsonString = JSON.stringify(exportPayload, null, 2);
             const dateTag = new Date().toISOString().slice(0, 10);
-            downloadAnchor.setAttribute("href", dataStr);
-            downloadAnchor.setAttribute("download", `ideavault-pro-backup-${dateTag}.json`);
-            document.body.appendChild(downloadAnchor);
-            downloadAnchor.click();
-            downloadAnchor.remove();
-            showToast(`Exported ${ideas.length} ideas to JSON!`);
+            const fileName = `ideavault-pro-backup-${dateTag}.json`;
+            const blob = new Blob([jsonString], { type: 'application/json' });
+
+            // Tier 1: Web Share API with File (Native Mobile PWA & iOS Safari Homescreen WebApp)
+            try {
+                if (navigator.canShare && typeof File !== 'undefined') {
+                    const shareFile = new File([blob], fileName, { type: 'application/json' });
+                    if (navigator.canShare({ files: [shareFile] })) {
+                        await navigator.share({
+                            title: 'IdeaVault Pro Backup',
+                            text: `IdeaVault Pro ideas backup (${ideas.length} concepts)`,
+                            files: [shareFile]
+                        });
+                        showToast(`Exported ${ideas.length} ideas!`);
+                        return;
+                    }
+                }
+            } catch (shareErr) {
+                if (shareErr.name === 'AbortError') return; // User cancelled share sheet
+                console.warn('Web Share API error, attempting next export method:', shareErr);
+            }
+
+            // Tier 2: File System Access API (Modern Desktop PWAs)
+            if (window.showSaveFilePicker) {
+                try {
+                    const handle = await window.showSaveFilePicker({
+                        suggestedName: fileName,
+                        types: [{
+                            description: 'JSON Backup File',
+                            accept: { 'application/json': ['.json'] }
+                        }]
+                    });
+                    const writable = await handle.createWritable();
+                    await writable.write(jsonString);
+                    await writable.close();
+                    showToast(`Exported ${ideas.length} ideas to JSON!`);
+                    return;
+                } catch (pickerErr) {
+                    if (pickerErr.name === 'AbortError') return; // User cancelled
+                    console.warn('FilePicker error, falling back to Blob download:', pickerErr);
+                }
+            }
+
+            // Tier 3: Standard Blob URL Download
+            try {
+                const blobUrl = URL.createObjectURL(blob);
+                const downloadAnchor = document.createElement('a');
+                downloadAnchor.href = blobUrl;
+                downloadAnchor.download = fileName;
+                downloadAnchor.rel = 'noopener';
+                document.body.appendChild(downloadAnchor);
+                downloadAnchor.click();
+                setTimeout(() => {
+                    document.body.removeChild(downloadAnchor);
+                    URL.revokeObjectURL(blobUrl);
+                }, 2000);
+                showToast(`Exported ${ideas.length} ideas to JSON!`);
+            } catch (downloadErr) {
+                console.error('Download error:', downloadErr);
+                // Tier 4: Fallback Copy to Clipboard
+                if (navigator.clipboard && navigator.clipboard.writeText) {
+                    await navigator.clipboard.writeText(jsonString);
+                    showToast('Backup JSON copied to clipboard!');
+                } else {
+                    showToast('Export failed. Please check device permissions.');
+                }
+            }
         }
 
         function importJSON(event) {
